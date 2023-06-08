@@ -49,7 +49,7 @@ async def logout(req: Request):
 async def auth_token(req: Request):
   session = req.session.get("laurel")
   if session is None:
-    RedirectResponse(req.url_for("auth_login"))
+    return RedirectResponse(req.url_for("auth_login"))
   token = str(uuid4())
   state[token] = req.session["laurel"]
   return {"account": "https://auth.laurel.informatik.uni-freiburg.de", "token": token}
