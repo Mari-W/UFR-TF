@@ -26,11 +26,11 @@ class Bot(Client):
     super().__init__(intents=intents, **options)
     
   async def on_ready(self):
-    await self.login()
+    await self.authentication()
     
 
   @try_catch
-  async def login(self):
+  async def authentication(self):
     # get login channel
     chan = self.get_channel(int(env.discord_auth_channel))
 
