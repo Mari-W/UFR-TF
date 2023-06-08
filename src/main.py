@@ -47,7 +47,7 @@ async def logout(req: Request):
 
 @api.get("/auth/token")
 async def auth_token(req: Request):
-  session = req.session["laurel"]
+  session = req.session.get("laurel")
   if session is None:
     RedirectResponse(req.url_for("auth_login"))
   token = str(uuid4())
