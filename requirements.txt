@@ -1,0 +1,6 @@
+fastapi 
+authlib 
+sqlalchemy 
+uvicorn 
+python-dotenv 
+discord.py
