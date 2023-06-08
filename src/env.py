@@ -12,7 +12,7 @@ class Env(BaseSettings):
 
 
   class Config:
-    env_file = "../.env"
+    env_file = ".env"
 
 
 env = Env()
