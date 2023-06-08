@@ -1,8 +1,8 @@
 from datetime import datetime
 import functools
 import traceback
-from discord import ButtonStyle, ChannelType, Client, Colour, Embed, Forbidden, Intents, Interaction, NotFound, Role, utils
-from discord.ui import View, Button, Modal, TextInput, ChannelSelect
+from discord import ButtonStyle, Client, Colour, Embed, Forbidden, Intents, Interaction, NotFound, Role, utils
+from discord.ui import View, Button, Modal, TextInput
 
 from .env import env
 from .state import state
@@ -26,11 +26,11 @@ class Bot(Client):
     super().__init__(intents=intents, **options)
     
   async def on_ready(self):
-    await self.authentication()
+    await self.login()
     
 
   @try_catch
-  async def authentication(self):
+  async def login(self):
     # get login channel
     chan = self.get_channel(int(env.discord_auth_channel))
 
