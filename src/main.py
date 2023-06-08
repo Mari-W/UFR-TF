@@ -38,7 +38,7 @@ laurel.register(
 @api.get("/auth/login")
 async def auth_login(req: Request):
   client = laurel.create_client("laurel")
-  return await client.authorize_redirect(req, str(req.url_for("auth_callback")))
+  return await client.authorize_redirect(req, env.url + "auth/callback")
 
 @api.get("/auth/logout")
 async def logout(req: Request):
@@ -53,7 +53,8 @@ async def auth_token(req: Request):
   token = str(uuid4())
   state[token] = req.session["laurel"]
   return {"account": "https://auth.laurel.informatik.uni-freiburg.de", "token": token}
-
+https://6bd15c7d-f7e1-4971-a235-15fde9e9f0a3.fr.bw-cloud-instance.org/auth/callback
+http://6bd15c7d-f7e1-4971-a235-15fde9e9f0a3.fr.bw-cloud-instance.org/auth/callback
 @api.get("/auth/callback")
 async def auth_callback(req: Request):
   client = laurel.create_client("laurel")
