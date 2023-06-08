@@ -4,3 +4,4 @@ sqlalchemy
 uvicorn 
 python-dotenv 
 discord.py
+httpx
