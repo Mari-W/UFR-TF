@@ -4,8 +4,8 @@ import traceback
 from discord import ButtonStyle, ChannelType, Client, Colour, Embed, Forbidden, Intents, Interaction, NotFound, Role, utils
 from discord.ui import View, Button, Modal, TextInput, ChannelSelect
 
-from env import env
-from state import state
+from .env import env
+from .state import state
 
 def try_catch(f):
     @functools.wraps(f)

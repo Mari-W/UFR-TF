@@ -8,9 +8,9 @@ from fastapi.responses import RedirectResponse
 from authlib.integrations.starlette_client import OAuth
 from starlette.middleware.sessions import SessionMiddleware
 
-from bot import Bot
-from env import env
-from state import state
+from .bot import Bot
+from .env import env
+from .state import state
 
 api = Api()
 bot = Bot()
