@@ -6,3 +6,4 @@ python-dotenv
 discord.py
 httpx
 itsdangerous
+jinja2

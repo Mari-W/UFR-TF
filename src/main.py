@@ -5,6 +5,7 @@ from uuid import uuid4
 from dotenv import load_dotenv
 from fastapi import FastAPI as Api, Request
 from fastapi.responses import RedirectResponse
+from fastapi.templating import Jinja2Templates
 from authlib.integrations.starlette_client import OAuth
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -14,7 +15,7 @@ from .state import state
 
 api = Api()
 bot = Bot()
-
+templates = Jinja2Templates(directory="templates")
 
 api.add_middleware(
   SessionMiddleware, secret_key=env.secret_key, max_age=94608000)
@@ -47,12 +48,12 @@ async def logout(req: Request):
 
 @api.get("/auth/token")
 async def auth_token(req: Request):
-  session = req.session.get("laurel")
-  if session is None:
+  user = req.session.get("laurel")
+  if user is None:
     return RedirectResponse(req.url_for("auth_login"))
   token = str(uuid4())
-  state[token] = req.session["laurel"]
-  return {"account": "https://auth.laurel.informatik.uni-freiburg.de", "token": token}
+  state[token] = user
+  return templates.TemplateResponse("token.html", {"request": req, "token": token, "sub": user["sub"]})
 
 @api.get("/auth/callback")
 async def auth_callback(req: Request):

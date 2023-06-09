@@ -1,12 +1,11 @@
 from datetime import datetime
 import functools
-import logging
 import traceback
-from discord import ButtonStyle, Client, Colour, Embed, Forbidden, Game, Intents, Interaction, NotFound, Role, utils
-from discord.ui import View, Button, Modal, TextInput
+from discord import ButtonStyle, Client, Colour, Embed, Forbidden, Game, Intents, Interaction, NotFound, Role, SelectOption, utils
+from discord.ui import View, Button, Modal, TextInput, Select
 
 from .env import env
-from .state import state, log
+from .state import state
 
 def try_catch(f):
     @functools.wraps(f)
