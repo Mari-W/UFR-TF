@@ -11,7 +11,7 @@ from starlette.middleware.sessions import SessionMiddleware
 
 from .bot import Bot
 from .env import env
-from .state import state
+from .shared import state
 
 api = Api()
 bot = Bot()

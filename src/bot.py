@@ -4,7 +4,7 @@ from discord import ButtonStyle, Client, Colour, Embed, Forbidden, Intents, Inte
 from discord.ui import View, Button, Modal, TextInput
 
 from .env import env
-from .state import state, mapping
+from .shared import state, mapping
 
 class Bot(Client):
 
