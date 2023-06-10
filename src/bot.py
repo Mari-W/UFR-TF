@@ -170,7 +170,7 @@ async def login(token: str, interaction: Interaction):
     # set name
     # TODO is .name correct? might use .{global, display}_name
     try:
-      await interaction.user.edit(nick=f"[{user['sub']}] {interaction.user.nick}")  
+      await interaction.user.edit(nick=f"[{user['sub']}] {interaction.user.display_name}")  
     except Forbidden:
       # user is server owner
       pass
