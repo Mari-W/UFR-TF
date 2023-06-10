@@ -134,7 +134,7 @@ class Bot(Client):
                                                 category=category,
                                                 position=1)
       await member.move_to(channel)
-    elif before.channel != after.channel and before.channel.category == category and not before.channel.members and before.channel.name != "create":
+    if before.channel != after.channel and before.channel.category == category and not before.channel.members and before.channel.name != "create":
       await before.channel.delete()
  
 async def logout(interaction: Interaction):
@@ -153,7 +153,7 @@ async def login(token: str, interaction: Interaction):
 
     # get user information
     user = state[token]
-
+    await interaction.response.send_message("1", ephemeral=True)
     # creates a role if it does not exist
     async def role(name: str) -> Role:
       role = utils.get(interaction.guild.roles, name=name)
@@ -164,7 +164,7 @@ async def login(token: str, interaction: Interaction):
     # assign according roles
     studies = mapping.get(user["studies"], user["studies"]) if user["studies"] is not None else "Employee"
     await interaction.user.add_roles(await role("Authenticated"), await role(studies))
-   
+    await interaction.response.send_message("2", ephemeral=True)
     # set name
     # TODO is .name correct? might use .{global, display}_name
     try:
@@ -173,7 +173,6 @@ async def login(token: str, interaction: Interaction):
       # user is server owner
       pass
     
-    print(4)
     # send success message
     await interaction.response.send_message(f"<logged in as {user['sub']}>", ephemeral=True)
   # token is invalid
