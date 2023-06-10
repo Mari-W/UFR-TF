@@ -20,6 +20,9 @@ templates = Jinja2Templates(directory="templates")
 api.add_middleware(
   SessionMiddleware, secret_key=env.secret_key, max_age=94608000)
 
+@bot.event
+async def on_voice_state_update(member, before, after):
+  bot.voice(member, before, after)
 
 @api.on_event("startup")
 async def startup():

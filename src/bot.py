@@ -1,6 +1,6 @@
 from datetime import datetime
 import re
-from discord import ButtonStyle, Client, Colour, Embed, Forbidden, Intents, Interaction, NotFound, Role, utils
+from discord import ButtonStyle, Client, Colour, Embed, Forbidden, Intents, Interaction, Member, NotFound, PermissionOverwrite, Role, VoiceState, utils
 from discord.ui import View, Button, Modal, TextInput
 
 from .env import env
@@ -83,7 +83,7 @@ class Bot(Client):
         matches =  matches = re.findall(r"^\[[a-z0-9]+\]", interaction.user.display_name)
         print(matches)
         if len(matches) != 1:
-          await interaction.response.send_message("<name does not follow guidlines `[xy123] name`> >", ephemeral=True)
+          await interaction.response.send_message("<name does not follow guidlines `[xy123] name`>", ephemeral=True)
           return
         await interaction.user.edit(nick=f"{matches[0]} {interaction.user.name}")  
       except Forbidden:
@@ -106,6 +106,18 @@ class Bot(Client):
     embed.set_footer(text="Powered by Laurel")
 
     await msg.edit(content="", embed=embed, view=view)
+
+  async def voice(self, member: Member, before: VoiceState, after: VoiceState):
+    create = utils.get(member.guild.voice_channels, name="create")
+    category = utils.get(member.guild.categories, name="voice")
+    if before.channel != after.channel and after.channel == create:
+      channel = await member.guild.create_voice_channel(name=f"{member.display_name}",
+                                                overwrites={member : PermissionOverwrite(manage_channels=True)},
+                                                category=category,
+                                                position=1)
+      await member.move_to(channel)
+    elif before.channel != after.channel and before.channel.category == category and not before.channel.members:
+      await before.channel.delete()
  
 async def logout(interaction: Interaction):
   roles = list(filter(lambda role: role.name != "Admin" and role.name != "@everyone" , interaction.user.roles))
