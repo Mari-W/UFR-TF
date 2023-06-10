@@ -99,11 +99,13 @@ class Bot(Client):
     async def update_name(interaction: Interaction):
       try:
         matches =  matches = re.findall(r"^\[[a-z0-9]+\]", interaction.user.display_name)
-        print(matches)
+
+        await interaction.user.edit(nick=None)
+
         if len(matches) != 1:
           await interaction.response.send_message("<name does not follow guidlines `[xy123] name`>", ephemeral=True)
           return
-        await interaction.user.edit(nick=f"{matches[0]} {interaction.user.name}")  
+        await interaction.user.edit(nick=f"{matches[0]} {interaction.user.display_name}")  
       except Forbidden:
         # user is server owner
         pass
@@ -168,7 +170,7 @@ async def login(token: str, interaction: Interaction):
     # set name
     # TODO is .name correct? might use .{global, display}_name
     try:
-      await interaction.user.edit(nick=f"[{user['sub']}] {interaction.user.name}")  
+      await interaction.user.edit(nick=f"[{user['sub']}] {interaction.user.display_name}")  
     except Forbidden:
       # user is server owner
       pass
