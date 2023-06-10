@@ -1,7 +1,5 @@
 from datetime import datetime
-import functools
 import re
-import traceback
 from discord import ButtonStyle, Client, Colour, Embed, Forbidden, Intents, Interaction, NotFound, Role, utils
 from discord.ui import View, Button, Modal, TextInput
 
