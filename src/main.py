@@ -53,6 +53,10 @@ async def auth_token(req: Request):
     return RedirectResponse(req.url_for("auth_login"))
   token = str(uuid4())
   state[token] = user
+  async def remove_key():
+    await asyncio.sleep(5*60)
+    state.pop(token, None)
+  asyncio.create_task(remove_key())
   return templates.TemplateResponse("token.html", {"request": req, "token": token, "sub": user["sub"]})
 
 @api.get("/auth/callback")
