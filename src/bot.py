@@ -105,7 +105,7 @@ class Bot(Client):
         if len(matches) != 1:
           await interaction.response.send_message("<name does not follow guidlines `[xy123] name`>", ephemeral=True)
           return
-        await interaction.user.edit(nick=f"{matches[0]} {interaction.user.nick}")  
+        await interaction.user.edit(nick=f"{matches[0]} {interaction.user.display_name}")  
       except Forbidden:
         # user is server owner
         pass
