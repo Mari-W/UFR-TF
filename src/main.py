@@ -22,7 +22,7 @@ api.add_middleware(
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-  bot.voice(member, before, after)
+  await bot.voice(member, before, after)
 
 @api.on_event("startup")
 async def startup():

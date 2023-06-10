@@ -116,7 +116,7 @@ class Bot(Client):
                                                 category=category,
                                                 position=1)
       await member.move_to(channel)
-    elif before.channel != after.channel and before.channel.category == category and not before.channel.members:
+    elif before.channel != after.channel and before.channel.category == category and not before.channel.members and before.channel.name != "create":
       await before.channel.delete()
  
 async def logout(interaction: Interaction):
