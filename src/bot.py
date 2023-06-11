@@ -281,9 +281,14 @@ async def login(token: str, interaction: Interaction, message=True) -> bool:
             role = utils.get(interaction.guild.roles, name=name)
             if role is None:
                 role = await interaction.guild.create_role(
-                    name=name, colour=Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), hoist=True
+                    name=name,
+                    colour=Colour.from_rgb(
+                        randint(0, 255), randint(0, 255), randint(0, 255)
+                    ),
+                    hoist=True,
                 )
                 await role.edit(position=1)
+
             return role
 
         # assign according roles
@@ -293,7 +298,7 @@ async def login(token: str, interaction: Interaction, message=True) -> bool:
             else "Employee"
         )
         await interaction.user.add_roles(
-            await utils.get(interaction.guild.roles, name="Authenticated"), await role(studies)
+            utils.get(interaction.guild.roles, name="Authenticated"), await role(studies)
         )
 
         # set name
