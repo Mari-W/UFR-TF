@@ -19,7 +19,7 @@ from discord import (
 from discord.ui import View, Button, Modal, TextInput
 
 from .env import env
-from .state import state, mapping
+from .state import state, mapping, subjects
 
 
 class Bot(Client):
@@ -252,7 +252,10 @@ class Bot(Client):
             await before.channel.delete()
 
     def channels(self):
-        pass
+        set(list(map(lambda subject: s["title"], sorted(
+            list(filter(subjects, lambda subject: subject["type"] not in ["Übung"] or "tutorat" in subject["title"].lower())),
+            lambda subject: subject["title"],
+        ))))
 
 
 async def logout(interaction: Interaction, message=True) -> bool:
