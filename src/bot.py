@@ -59,7 +59,9 @@ class Bot(Client):
     authenticate_button = Button(label="Authenticate", style=ButtonStyle.primary)
     authenticate_button.callback = start_authentication 
 
-    view = View(timeout=None).add_item(authenticate_button)
+    token_button = Button(label="Get Token", url=env.url + "auth/token")
+
+    view = View(timeout=None).add_item(token_button).add_item(authenticate_button)
 
     embed = Embed(type="rich", title="Login using University Account", url=env.url + "auth/token", colour=Colour.blue(), timestamp=datetime.now(), description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam.")
    
@@ -82,12 +84,14 @@ class Bot(Client):
 
     # modal that receives the token via input field
     class TokenInput(Modal, title="Enter Authorization Token"):
-      token = TextInput(label="Token", placeholder="Paste Token Here")
+      token = TextInput(label="Token", placeholder="Paste Authorization Token Here")
 
       async def on_submit(self, interaction: Interaction): 
-          await logout()
-          await login(str(self.token), interaction)
-    
+          await logout(interaction, message=False)
+          if await logout(interaction, message=False) and await login(str(self.token), interaction, message=False):
+            await interaction.response.send_message("<succesfully updated university account details>")
+
+  
     # starts the authentication process
     async def start_update(interaction: Interaction):
       await interaction.response.send_modal(TokenInput())
@@ -96,27 +100,32 @@ class Bot(Client):
     update_button = Button(label="Sync Account", style=ButtonStyle.primary)
     update_button.callback = start_update 
 
-    async def update_name(interaction: Interaction):
-      try:
-        matches =  matches = re.findall(r"^\[[a-z0-9]+\]", interaction.user.nick)
+    token_button = Button(label="Get Token", url=env.url + "auth/token")
 
-        await interaction.user.edit(nick=None)
+    class NameInput(Modal, title="Enter Name"):
+      name = TextInput(label="Name", placeholder="Enter Name Here")
 
+      async def on_submit(self, interaction: Interaction): 
+        matches = re.findall(r"^\[[a-z0-9]+\]", interaction.user.nick)
         if len(matches) != 1:
-          await interaction.response.send_message("<name does not follow guidlines `[xy123] name`>", ephemeral=True)
-          return
-        await interaction.user.edit(nick=f"{matches[0]} {interaction.user.display_name}")  
-      except Forbidden:
-        # user is server owner
-        pass
-      await interaction.response.send_message("<name update successful>", ephemeral=True)
+            await interaction.response.send_message("<name does not follow guidlines `[xy123] name`>", ephemeral=True)
+            return
+        try:
+          await interaction.user.edit(nick=f"{matches[0]} {self.name}")  
+        except Forbidden:
+          # user is server owner
+          pass
+        await interaction.response.send_message("<name update successful>", ephemeral=True)
+
+    async def update_name(interaction: Interaction):
+      await interaction.response.send_modal(NameInput())
       
 
-    update_name_button = Button(label="Sync Name", style=ButtonStyle.secondary)
+    update_name_button = Button(label="Set Name", style=ButtonStyle.secondary)
     update_name_button.callback = update_name 
 
 
-    view = View(timeout=None).add_item(logout_button).add_item(update_button).add_item(update_name_button)
+    view = View(timeout=None).add_item(logout_button).add_item(token_button).add_item(update_button).add_item(update_name_button)
 
     embed = Embed(type="rich", title="Manage Your Connected Account", colour=Colour.blue(), timestamp=datetime.now(), description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam.")
    
@@ -132,14 +141,27 @@ class Bot(Client):
     category = utils.get(member.guild.categories, name="voice")
     if before.channel != after.channel and after.channel == create:
       channel = await member.guild.create_voice_channel(name=f"{member.display_name}",
-                                                overwrites={member : PermissionOverwrite(manage_channels=True)},
+                                                overwrites={member : PermissionOverwrite(manage_channels=True, view_channel=False), 
+                                                utils.get(member.guild.roles, name="Authenticated") : PermissionOverwrite(
+                                                              add_reactions=True,
+                                                              attach_files=True,
+                                                              connect=True,
+                                                              embed_links=True,
+                                                              external_emoji=True,
+                                                              external_stickers=True,
+                                                              read_message_history=True,
+                                                              read_message=True,
+                                                              send_message=True,
+                                                              speak=True,
+                                                              stream=True,
+                                                              view_channel=True)},
                                                 category=category,
                                                 position=1)
       await member.move_to(channel)
     if before.channel != after.channel and before.channel.category == category and not before.channel.members and before.channel.name != "create":
       await before.channel.delete()
  
-async def logout(interaction: Interaction):
+async def logout(interaction: Interaction, message=True) -> bool:
   roles = list(filter(lambda role: role.name != "Admin" and role.name != "@everyone" , interaction.user.roles))
   await interaction.user.remove_roles(*roles)
   try:
@@ -147,9 +169,11 @@ async def logout(interaction: Interaction):
   except Forbidden:
     # user is server owner
     pass
-  await interaction.response.send_message("<logged out>", ephemeral=True)
+  if message:
+    await interaction.response.send_message("<logged out>", ephemeral=True)
+  return True
 
-async def login(token: str, interaction: Interaction):
+async def login(token: str, interaction: Interaction, message=True) -> bool:
   # token is valid
   if token in state:
 
@@ -176,8 +200,11 @@ async def login(token: str, interaction: Interaction):
       pass
     
     # send success message
-    await interaction.response.send_message(f"<logged in as {user['sub']}>", ephemeral=True)
+    if message:
+      await interaction.response.send_message(f"<logged in as {user['sub']}>", ephemeral=True)
+    return True
   # token is invalid
   else:
     # send failure message
     await interaction.response.send_message("<token not found>", ephemeral=True)
+    return False
