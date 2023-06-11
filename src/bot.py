@@ -297,7 +297,7 @@ async def login(token: str, interaction: Interaction, message=True) -> bool:
 
         # set name
         # TODO is .name correct? might use .{global, display}_name
-        name = re.sub(r"^\[[a-z0-9]+\]", "", interaction.user.nick)
+        name = re.sub(r"^\[[a-z0-9]+\]", "", interaction.user.display_name)
         try:
             await interaction.user.edit(
                 nick=f"[{user['sub']}] {name}"
