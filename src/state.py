@@ -1,3 +1,6 @@
+from multiprocessing import Manager
+
+
 state = Manager().dict()
 
 # TODO: import data/mapping.json..
