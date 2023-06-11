@@ -19,7 +19,7 @@ from discord import (
 from discord.ui import View, Button, Modal, TextInput
 
 from .env import env
-from .shared import state, mapping
+from .state import state, mapping
 
 
 class Bot(Client):
@@ -251,6 +251,9 @@ class Bot(Client):
         ):
             await before.channel.delete()
 
+    def channels(self):
+        pass
+
 
 async def logout(interaction: Interaction, message=True) -> bool:
     roles = list(
@@ -298,7 +301,8 @@ async def login(token: str, interaction: Interaction, message=True) -> bool:
             else "Employee"
         )
         await interaction.user.add_roles(
-            utils.get(interaction.guild.roles, name="Authenticated"), await role(studies)
+            utils.get(interaction.guild.roles, name="Authenticated"),
+            await role(studies),
         )
 
         # set name
