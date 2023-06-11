@@ -287,7 +287,7 @@ async def login(token: str, interaction: Interaction, message=True) -> bool:
                     ),
                     hoist=True,
                 )
-                await role.edit(position=1)
+                await role.edit(position=2)
 
             return role
 
