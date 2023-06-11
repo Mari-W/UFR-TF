@@ -283,7 +283,7 @@ async def login(token: str, interaction: Interaction, message=True) -> bool:
                 role = await interaction.guild.create_role(
                     name=name, colour=Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), hoist=True
                 )
-                role.edit(position=1)
+                await role.edit(position=1)
             return role
 
         # assign according roles
