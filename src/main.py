@@ -1,70 +1,69 @@
-# bot.py
 import asyncio
-from uuid import uuid4
 
 from dotenv import load_dotenv
 from fastapi import FastAPI as Api, Request
-from fastapi.responses import RedirectResponse
-from fastapi.templating import Jinja2Templates
-from authlib.integrations.starlette_client import OAuth
 from starlette.middleware.sessions import SessionMiddleware
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
+from .auth import login, logout, token, callback
 from .bot import Bot
 from .env import env
-from .state import state
 
-api = Api()
+## FastAPI ##############################################################################
+
+app = Api()
+
+# Limiter & Middleware
+
+
+limiter = Limiter(key_func=get_remote_address)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+app.add_middleware(SessionMiddleware, secret_key=env.secret_key, max_age=94608000)
+
+# Events
+
+
+@app.on_event("startup")
+async def startup():
+    load_dotenv()
+    asyncio.create_task(bot.start(env.discord_bot_token))
+
+
+# Routes
+
+
+@app.get("/auth/login")
+async def auth_login(request: Request):
+    await login(request)
+
+
+@app.get("/auth/logout")
+async def logout(request: Request):
+    await logout(request)
+
+
+@app.get("/auth/token")
+@limiter.limit("60/minute")
+async def auth_token(request: Request):
+    await token(request)
+
+
+@app.get("/auth/callback")
+async def auth_callback(request: Request):
+    await callback(request)
+
+
+## Discord Bot ##########################################################################
+
 bot = Bot()
-templates = Jinja2Templates(directory="templates")
 
-api.add_middleware(
-  SessionMiddleware, secret_key=env.secret_key, max_age=94608000)
+# Events
+
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-  await bot.voice(member, before, after)
-
-@api.on_event("startup")
-async def startup():
-  load_dotenv()
-  asyncio.create_task(bot.start(env.discord_bot_token))
-
-
-laurel = OAuth()
-laurel.register(
-  "laurel",
-  server_metadata_url=env.laurel_metadata_url,
-  client_id=env.laurel_client_id,
-  client_secret=env.laurel_client_secret,
-  client_kwargs={"scope": "openid profile studies"},
-)
-
-@api.get("/auth/login")
-async def auth_login(req: Request):
-  client = laurel.create_client("laurel")
-  return await client.authorize_redirect(req, env.url + "auth/callback")
-
-@api.get("/auth/logout")
-async def logout(req: Request):
-  req.session.clear()
-  return RedirectResponse(req.url_for("auth_login"))
-
-@api.get("/auth/token")
-async def auth_token(req: Request):
-  user = req.session.get("laurel")
-  if user is None:
-    return RedirectResponse(req.url_for("auth_login"))
-  token = str(uuid4())
-  state[token] = user
-  async def remove_key():
-    await asyncio.sleep(5*60)
-    state.pop(token, None)
-  asyncio.create_task(remove_key())
-  return templates.TemplateResponse("token.html", {"request": req, "token": token, "sub": user["sub"]})
-
-@api.get("/auth/callback")
-async def auth_callback(req: Request):
-  client = laurel.create_client("laurel")
-  token = await client.authorize_access_token(req)
-  req.session["laurel"] = token["userinfo"]
-  return RedirectResponse(req.url_for("auth_token"))
+    await bot.voice(member, before, after)

@@ -2,16 +2,16 @@ from pydantic import BaseSettings
 
 
 class Env(BaseSettings):
-  url: str
-  secret_key: str
-  laurel_metadata_url: str
-  laurel_client_id: str
-  laurel_client_secret: str
-  discord_bot_token: str
+    url: str  # public server url
+    secret_key: str  # secret key used to encrypt session
+    laurel_metadata_url: str  # open id connect config
+    laurel_client_id: str  # oauth client id
+    laurel_client_secret: str  # oauth client secret
+    laurel_logout_url: str  # logout url with ?redirect= parameter
+    discord_bot_token: str  # discord bot secret token
 
-
-  class Config:
-    env_file = ".env"
+    class Config:
+        env_file = ".env"
 
 
 env = Env()

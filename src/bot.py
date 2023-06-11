@@ -1,4 +1,5 @@
 from datetime import datetime
+from multiprocessing import Manager
 from random import randint
 import re
 from discord import (
@@ -19,7 +20,9 @@ from discord import (
 from discord.ui import View, Button, Modal, TextInput
 
 from .env import env
-from .state import state, mapping, subjects
+from .data import degrees
+
+state = Manager().dict()
 
 
 class Bot(Client):
@@ -251,11 +254,8 @@ class Bot(Client):
         ):
             await before.channel.delete()
 
-    def channels(self):
-        set(list(map(lambda subject: s["title"], sorted(
-            list(filter(subjects, lambda subject: subject["type"] not in ["Übung"] or "tutorat" in subject["title"].lower())),
-            lambda subject: subject["title"],
-        ))))
+    async def channels(self):
+        pass
 
 
 async def logout(interaction: Interaction, message=True) -> bool:
@@ -299,7 +299,7 @@ async def login(token: str, interaction: Interaction, message=True) -> bool:
 
         # assign according roles
         studies = (
-            mapping.get(user["studies"], user["studies"])
+            degrees.get(user["studies"], user["studies"])
             if user["studies"] is not None
             else "Employee"
         )
@@ -308,8 +308,7 @@ async def login(token: str, interaction: Interaction, message=True) -> bool:
             await role(studies),
         )
 
-        # set name
-        # TODO is .name correct? might use .{global, display}_name
+        # remove account from name before
         name = re.sub(r"^\[[a-z0-9]+\]", "", interaction.user.display_name)
         try:
             await interaction.user.edit(nick=f"[{user['sub']}] {name}")

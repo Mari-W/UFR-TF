@@ -1,21 +1,18 @@
 from multiprocessing import Manager
 
-
-state = Manager().dict()
-
-# TODO: import data/mapping.json..
-mapping = {
-    "05-968": "\u00c4ltere deutsche Literatur und Sprache",
+# maps degree identities returned by laurel (i.e. ldap) to actual names
+degrees = {
+    "05-968": "Ältere deutsche Literatur und Sprache",
     "06-772": "Altertumswissenschaften",
     "06-080": "Altertumswissenschaften",
     "06-081": "Altertumswissenschaften",
     "06-629": "Angewandte Politikwissenschaft",
     "07-628": "Applied Physics",
-    "06-712": "Arch\u00e4ologische Wissenschaften",
-    "06-074": "Arch\u00e4ologische Wissenschaften",
-    "06-075": "Arch\u00e4ologische Wissenschaften",
-    "06-076": "Arch\u00e4ologische Wissenschaften",
-    "06-077": "Arch\u00e4ologische Wissenschaften",
+    "06-712": "Archäologische Wissenschaften",
+    "06-074": "Archäologische Wissenschaften",
+    "06-075": "Archäologische Wissenschaften",
+    "06-076": "Archäologische Wissenschaften",
+    "06-077": "Archäologische Wissenschaften",
     "03-021": "Betriebswirtschaftslehre",
     "03-621": "Betriebswirtschaftslehre",
     "03-651": "Bildungswissenschaft und Bildungsmanagement",
@@ -29,11 +26,11 @@ mapping = {
     "08-032": "Chemie",
     "06-645": "Chinesisch",
     "06-913": "Classical Cultures",
-    "05-034": "D\u00e4nisch",
+    "05-034": "Dänisch",
     "05-836": "Deutsch",
     "05-691": "Deutsch",
-    "99-752": "Deutsch-Franz\u00f6sische Journalistik",
-    "02-635": "Deutsch-Franz\u00f6sisches Recht",
+    "99-752": "Deutsch-Französische Journalistik",
+    "02-635": "Deutsch-Französisches Recht",
     "05-970": "Deutsche Literatur",
     "05-867": "Deutsche Sprach- und Literaturwissenschaft",
     "93-675": "Economics",
@@ -48,11 +45,11 @@ mapping = {
     "10-859": "Environmental Governance",
     "03-052": "Erziehungswissenschaft",
     "06-773": "Ethnologie",
-    "05-724": "Europ\u00e4ische Gesellschaften und Kulturen",
-    "05-988": "Europ\u00e4ische Literaturen und Kulturen",
+    "05-724": "Europäische Gesellschaften und Kulturen",
+    "05-988": "Europäische Literaturen und Kulturen",
     "10-660": "Forstwissenschaften/Forest Sciences",
     "05-839": "FrankoMedia",
-    "05-059": "Franz\u00f6sisch",
+    "05-059": "Französisch",
     "05-671": "Fremdsprache Deutsch",
     "06-850": "Gender Studies",
     "10-050": "Geographie",
@@ -66,7 +63,7 @@ mapping = {
     "06-068": "Geschichte",
     "06-730": "Global Urban Health",
     "05-770": "Griechisch",
-    "06-613": "Griechisch-r\u00f6mische Arch\u00e4ologie",
+    "06-613": "Griechisch-römische Archäologie",
     "04-933": "Hebammenwissenschaft",
     "10-956": "Holz- und Bioenergie",
     "10-866": "Hydrologie",
@@ -77,7 +74,7 @@ mapping = {
     "11-786": "Intelligente Eingebettete Mikrosysteme",
     "864-1": "Interdiscipry -linEthics",
     "06-930": "Anthropologie",
-    "03-932": "Gesundheitsf\u00f6rderung",
+    "03-932": "Gesundheitsförderung",
     "06-929": "Grundlagen der Politikwissenschaft",
     "99-737": "Interkulturelle Studien",
     "03-878": "International Taxation",
@@ -93,7 +90,7 @@ mapping = {
     "05-005": "Klassische Philologie",
     "05-079": "Klassische Philologie",
     "05-078": "Klassische Philologie",
-    "06-912": "Klassische und Christliche Arch\u00e4ologie",
+    "06-912": "Klassische und Christliche Archäologie",
     "03-732": "Klinische Psychologie",
     "03-832": "Kognitionspsychologie",
     "03-834": "Kognitionswissenschaft",
@@ -131,7 +128,7 @@ mapping = {
     "05-820": "Norwegisch",
     "04-634": "Palliative Care",
     "04-984": "Parodontologie und Implantattherapie",
-    "04-985": "Parodontologie und Periimplant\u00e4re Therapie",
+    "04-985": "Parodontologie und Periimplantäre Therapie",
     "04-234": "Pflegewissenschaft",
     "08-626": "Pharmazeutische Wissenschaften",
     "08-126": "Pharmazie",
@@ -151,7 +148,7 @@ mapping = {
     "10-857": "Renewable Energy Engineering and Management",
     "05-636": "Romanische Sprachen und Literaturen",
     "05-638": "Romanistik",
-    "05-639": "Rum\u00e4nisch",
+    "05-639": "Rumänisch",
     "05-139": "Russisch",
     "05-846": "Russlandstudien",
     "05-847": "Russlandstudien",
@@ -192,17 +189,15 @@ mapping = {
     "10-758": "Waldwirtschaft und Umwelt",
     "10-761": "Waldwissenschaften",
     "03-684": "Wirtschaftswissenschaft",
-    "04-185": "Zahnmedizin"
+    "04-185": "Zahnmedizin",
 }
 
-
-subjects = {
+# complete list of events chosable in sose 2023 at tf (excluding tutorials for lectures)
+events = {
     "Bildverarbeitung und Computergraphik / Image Processing and Computer Graphics": {
         "type": "Vorlesung"
     },
-    "Künstliche Intelligenz / Artificial Intelligence": {
-        "type": "Vorlesung"
-    },
+    "Künstliche Intelligenz / Artificial Intelligence": {"type": "Vorlesung"},
     "Softwaretechnik / Software Engineering": {"type": "Vorlesung"},
     "Bioinformatik II / Bioinformatics II": {"type": "Vorlesung"},
     "Einführung in die Mobile Robotik / Introduction to Mobile Robotics": {
@@ -272,9 +267,7 @@ subjects = {
     "Investition und Finanzierung (Tutorate)": {"type": "Lehrveranstaltung"},
     "Mikroökonomik II": {"type": "Vorlesung"},
     "Unternehmensrechnung": {"type": "Vorlesung"},
-    "Mathematik II für Studierende der Ingenieurwissenschaften": {
-        "type": "Vorlesung"
-    },
+    "Mathematik II für Studierende der Ingenieurwissenschaften": {"type": "Vorlesung"},
     "Halbleiterphysik": {"type": "Vorlesung"},
     "Messtechnik": {"type": "Vorlesung"},
     "Angewandte Finite Elemente für die Strukturmechanik": {"type": "Vorlesung"},
@@ -346,12 +339,8 @@ subjects = {
     "REFLECT: Going abroad. Your student exchange capstone module.": {
         "type": "Lehrveranstaltung"
     },
-    "Frei Sprechen vor Publikum": {
-        "type": "Lehrveranstaltung"
-    },
-    "Argumentieren in Diskussion und Debatte": {
-        "type": "Lehrveranstaltung"
-    },
+    "Frei Sprechen vor Publikum": {"type": "Lehrveranstaltung"},
+    "Argumentieren in Diskussion und Debatte": {"type": "Lehrveranstaltung"},
     "Interkulturelle Kompetenzen im globalen Arbeitskontext": {
         "type": "Lehrveranstaltung"
     },
@@ -361,19 +350,15 @@ subjects = {
     "Advanced Database and Information Systems": {"type": "Lehrveranstaltung"},
     "Numerical Optimal Control in Science and Engineering": {"type": "Vorlesung"},
     "Test und Zuverlässigkeit / Test and Reliability": {"type": "Vorlesung"},
-    "Windenergiesysteme / Wind\xa0Energy\xa0Systems": {"type": "Vorlesung"},
+    "Windenergiesysteme / Wind Energy Systems": {"type": "Vorlesung"},
     "Embedded Systems Entrepreneurship (2ES)": {"type": "Vorlesung"},
     "Wearable and Implantable Computing (WIC)": {"type": "Vorlesung"},
     "Data Converters": {"type": "Vorlesung"},
     "Micro-actuators": {"type": "Vorlesung"},
     "Optical detector based on digital lock-in amplifiers": {"type": "Projekt"},
-    "Kontinuumsmechanik I / Continuum mechanics I": {
-        "type": "Vorlesung"
-    },
+    "Kontinuumsmechanik I / Continuum mechanics I": {"type": "Vorlesung"},
     "Machine Learning Approaches in Structural Mechanics": {"type": "Vorlesung"},
-    "Polymer Processing and Microsystems Engineering": {
-        "type": "Vorlesung"
-    },
+    "Polymer Processing and Microsystems Engineering": {"type": "Vorlesung"},
     "Biotechnologie für Ingenieurinnen und Ingenieure I: Einführung, Molekular- und Mikrobiologie": {
         "type": "Vorlesung"
     },
@@ -398,18 +383,14 @@ subjects = {
         "type": "Vorlesung"
     },
     "Model Thinking for Complex Systems": {"type": "Lehrveranstaltung"},
-    "Computational Economics": {
-        "type": "Vorlesung"
-    },
+    "Computational Economics": {"type": "Vorlesung"},
     "Electronic Markets": {"type": "Vorlesung"},
     "Gesundheitsmanagement": {"type": "Vorlesung"},
     "Marketing Management": {"type": "Vorlesung"},
     "Principles of Finance": {"type": "Vorlesung"},
     "Regulation and Competition Policy": {"type": "Vorlesung"},
     "Automatic Mitochondria Segmentation via Transer Learning": {"type": "Projekt"},
-    "Masterprojekt SSE / Master Project SSE": {
-        "type": "Kolloquium"
-    },
+    "Masterprojekt SSE / Master Project SSE": {"type": "Kolloquium"},
     "Solarzellcharakterisierung: Vom Rohmaterial bis zur Zelleffizienz": {
         "type": "Vorlesung"
     },
@@ -470,9 +451,7 @@ subjects = {
     "Verantwortlich handeln – was heißt das? Ethische Fragen in Alltag und Beruf": {
         "type": "Lehrveranstaltung"
     },
-    "Writing in English for Professional Purposes": {
-        "type": "Lehrveranstaltung"
-    },
+    "Writing in English for Professional Purposes": {"type": "Lehrveranstaltung"},
     "Einführung in die Presse- und Öffentlichkeitsarbeit": {
         "type": "Lehrveranstaltung"
     },
@@ -483,9 +462,7 @@ subjects = {
         "type": "Lehrveranstaltung"
     },
     "Einführung in das Projektmanagement": {"type": "Lehrveranstaltung"},
-    "Basiswissen Betriebswirtschaftslehre": {
-        "type": "Lehrveranstaltung"
-    },
+    "Basiswissen Betriebswirtschaftslehre": {"type": "Lehrveranstaltung"},
     "Einführung in den Online-Journalismus": {"type": "Lehrveranstaltung"},
     "Öffentlichkeitsarbeit – Einblicke in die Berufspraxis": {
         "type": "Lehrveranstaltung"
@@ -506,14 +483,10 @@ subjects = {
     "English for Academic Purposes (B2)": {"type": "Lehrveranstaltung"},
     "Einführung in das Betriebssystem Linux": {"type": "Lehrveranstaltung"},
     "Französisch I (A0 - A1.1)": {"type": "Lehrveranstaltung"},
-    "Französisch II (A1.1 - A1)": {
-        "type": "Lehrveranstaltung"
-    },
+    "Französisch II (A1.1 - A1)": {"type": "Lehrveranstaltung"},
     "Stimme und Körpersprache in der Präsentation": {"type": "Lehrveranstaltung"},
     "Business English Advanced (B2)": {"type": "Lehrveranstaltung"},
-    "Türkisch II (A1.1 - A1.2)": {
-        "type": "Lehrveranstaltung"
-    },
+    "Türkisch II (A1.1 - A1.2)": {"type": "Lehrveranstaltung"},
     "Museums- und Stadtführung in Theorie und Praxis": {"type": "Lehrveranstaltung"},
     "Personale Grundlagen für die Berufsoption Selbständigkeit": {
         "type": "Lehrveranstaltung"
@@ -548,9 +521,7 @@ subjects = {
         "type": "Lehrveranstaltung"
     },
     "Spanisch Konversation I (B1)": {"type": "Lehrveranstaltung"},
-    "Französisch Avancé  (B2 - C1.1)": {
-        "type": "Lehrveranstaltung"
-    },
+    "Französisch Avancé  (B2 - C1.1)": {"type": "Lehrveranstaltung"},
     "Transkulturelle Kompetenz in einer globalisierten Welt": {
         "type": "Lehrveranstaltung"
     },
@@ -627,9 +598,7 @@ subjects = {
         "type": "Lehrveranstaltung"
     },
     "Writing in English for Academic Purposes": {"type": "Lehrveranstaltung"},
-    "FOSTER Open Science – Student Toolkit": {
-        "type": "Lehrveranstaltung"
-    },
+    "FOSTER Open Science – Student Toolkit": {"type": "Lehrveranstaltung"},
     "Service Learning.international – Engage. Connect. Reflect.": {
         "type": "Lehrveranstaltung"
     },
@@ -640,9 +609,7 @@ subjects = {
         "type": "Lehrveranstaltung"
     },
     "Objektorientiertes Programmieren mit Java": {"type": "Lehrveranstaltung"},
-    "Grundlagen der künstlichen Intelligenz (KI)": {
-        "type": "Lehrveranstaltung"
-    },
+    "Grundlagen der künstlichen Intelligenz (KI)": {"type": "Lehrveranstaltung"},
     "Digitale Gesprächsführung und kollaboratives Arbeiten": {
         "type": "Lehrveranstaltung"
     },
@@ -689,9 +656,7 @@ subjects = {
         "type": "Vorlesung"
     },
     "Energiegewinnung / Energy harvesting": {"type": "Vorlesung"},
-    "Energiespeicherung und Wandlung mittels Brennstoffzellen": {
-        "type": "Vorlesung"
-    },
+    "Energiespeicherung und Wandlung mittels Brennstoffzellen": {"type": "Vorlesung"},
     "Entwurf Analoger CMOS Schaltungen / Analog CMOS Circuit Design": {
         "type": "Vorlesung"
     },
@@ -700,16 +665,12 @@ subjects = {
     "Keramische Werkstoffe der Mikrotechnik": {"type": "Vorlesung"},
     "Lithographie ": {"type": "Vorlesung"},
     "Materials for Electronic Systems": {"type": "Vorlesung"},
-    "Mechanischen Eigenschaften und Degradationsmechanismen": {
-        "type": "Vorlesung"
-    },
+    "Mechanischen Eigenschaften und Degradationsmechanismen": {"type": "Vorlesung"},
     "Mikroakustische Wandler / Micro Acoustical Transducers": {"type": "Vorlesung"},
     "Nanobiotechnologie / Nanobiotechnology": {"type": "Vorlesung"},
     "Nanomaterialien / Nanomaterials": {"type": "Vorlesung"},
     "Nanotechnologie / Nanotechnology": {"type": "Vorlesung"},
-    "Optimierung von Fertigungsverfahren / Advanced engineering": {
-        "type": "Vorlesung"
-    },
+    "Optimierung von Fertigungsverfahren / Advanced engineering": {"type": "Vorlesung"},
     "Optical MEMS": {"type": "Vorlesung"},
     "Optoelectronics": {"type": "Vorlesung"},
     "Quantenmechanik für Ingenieur*innen / Quantum Mechanics for Engineers": {
@@ -761,9 +722,7 @@ subjects = {
         "type": "Praktikum"
     },
     "Rennautoregelung Praktikum / Race Car Control Laboratory": {"type": "Praktikum"},
-    "RF- and Microwave Systems - Design Course": {
-        "type": "Praktikum"
-    },
+    "RF- and Microwave Systems - Design Course": {"type": "Praktikum"},
     "Technologien der Implantatfertigung / Implant Manufacturing Laboratory": {
         "type": "Praktikum"
     },
@@ -787,9 +746,7 @@ subjects = {
     "Algorithms and Complexity Reading Group": {"type": "Seminar"},
     "Current Works in Deep Reinforcement Learning": {"type": "Seminar"},
     "Seminar der Mikrosystemtechnik": {"type": "Seminar"},
-    "Resilienz und Kollaps ökologisch-ökonomischer Systeme": {
-        "type": "Seminar"
-    },
+    "Resilienz und Kollaps ökologisch-ökonomischer Systeme": {"type": "Seminar"},
     "Studienseminar Sustainable Systems Engineering": {"type": "Seminar"},
     "Nachhaltigkeitskonzepte und -bewertung": {"type": "Seminar"},
     "Technologien Erneuerbarer Energien": {"type": "Seminar"},
