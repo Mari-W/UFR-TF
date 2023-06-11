@@ -1,4 +1,5 @@
 from datetime import datetime
+from random import randint
 import re
 from discord import (
     ButtonStyle,
@@ -280,8 +281,9 @@ async def login(token: str, interaction: Interaction, message=True) -> bool:
             role = utils.get(interaction.guild.roles, name=name)
             if role is None:
                 role = await interaction.guild.create_role(
-                    name=name, colour=Colour.from_rgb(255, 255, 255)
+                    name=name, colour=Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)), hoist=True
                 )
+                role.edit(position=1)
             return role
 
         # assign according roles
@@ -291,7 +293,7 @@ async def login(token: str, interaction: Interaction, message=True) -> bool:
             else "Employee"
         )
         await interaction.user.add_roles(
-            await role("Authenticated"), await role(studies)
+            await utils.get(interaction.guild.roles, name="Authenticated"), await role(studies)
         )
 
         # set name
