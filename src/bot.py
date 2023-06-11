@@ -133,7 +133,6 @@ class Bot(Client):
             )
 
             async def on_submit(self, interaction: Interaction):
-                await logout(interaction, message=False)
                 if await logout(interaction, message=False) and await login(
                     str(self.token), interaction, message=False
                 ):
@@ -299,9 +298,7 @@ async def login(token: str, interaction: Interaction, message=True) -> bool:
         # TODO is .name correct? might use .{global, display}_name
         name = re.sub(r"^\[[a-z0-9]+\]", "", interaction.user.display_name)
         try:
-            await interaction.user.edit(
-                nick=f"[{user['sub']}] {name}"
-            )
+            await interaction.user.edit(nick=f"[{user['sub']}] {name}")
         except Forbidden:
             # user is server owner
             pass
