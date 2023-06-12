@@ -64,13 +64,13 @@ class Bot(Client):
 
     async def about(self):
         # get about channel
-        message = await last_channel_message(channel_by_name("about"))
+        message = await last_channel_message(channel_by_name(self, "about"))
         # update message
         await message.edit(content="", embed=about_embed)
 
     async def authenticate(self):
         # get authenticate channel
-        message = await last_channel_message(channel_by_name("authenticate"))
+        message = await last_channel_message(channel_by_name(self, "authenticate"))
 
         # try logging in on token input
         async def on_login(input: AuthTokenInput, interaction: Interaction):
@@ -87,7 +87,7 @@ class Bot(Client):
         await message.edit(content="", embed=auth_embed, view=auth_view())
 
     async def account(self):
-        message = await last_channel_message(channel_by_name("account"))
+        message = await last_channel_message(channel_by_name(self, "account"))
 
         account_logout_button.callback = logout
 
@@ -113,7 +113,7 @@ class Bot(Client):
             await update_name(str(input.name), interaction)
 
         account_name_input.on_submit = on_rename
-        
+
         # opens name modal for new name
         async def account_name_modal(interaction: Interaction):
             await interaction.response.send_modal(account_name_input)
@@ -265,12 +265,12 @@ async def last_channel_message(channel: TextChannel) -> Message:
     try:
         message = await channel.fetch_message(channel.last_message_id)
     except NotFound:
-        message = await channel.send(content="...")
+        message = await channel.send(content="...", silent=True)
     return message
 
 
 def channel_by_name(bot: Bot, name: str, category: str | None = None):
     def find(channel: TextChannel) -> bool:
-        channel.name == name and (category == None or channel.category.name == category)
+        return channel.name == name and (category == None or channel.category.name == category)
 
     return utils.find(find, bot.guilds[0].text_channels)
