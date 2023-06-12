@@ -60,6 +60,7 @@ async def token(request: Request):
         state.pop(token, None)
 
     asyncio.create_task(remove_key())
+
     return templates.TemplateResponse(
         "token.html", {"request": request, "token": token, "sub": user["sub"]}
     )

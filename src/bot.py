@@ -22,7 +22,6 @@ from discord import (
 
 from .data import degrees
 from .ui import (
-    AccountNameInput,
     about_embed,
     AuthTokenInput,
     auth_token_input,
@@ -33,6 +32,7 @@ from .ui import (
     auth_login_success,
     auth_login_failure,
     AccountTokenInput,
+    AccountNameInput,
     account_logout_button,
     account_update_success,
     account_token_input,
@@ -47,6 +47,8 @@ from .ui import (
 
 # thread shared state between fastapi and discord bot
 state = Manager().dict()
+
+## Bot ##################################################################################
 
 
 class Bot(Client):
@@ -172,6 +174,9 @@ class Bot(Client):
         pass
 
 
+## Functionality ########################################################################
+
+
 async def login(token: str, interaction: Interaction, message=True) -> bool:
     # token is valid
     if token in state:
@@ -244,6 +249,9 @@ async def update_name(name: str, interaction: Interaction):
         # user is server owner
         pass
     await send_response_message(account_name_update_success)
+
+
+## Utils ################################################################################
 
 
 async def get_or_create_role(guild: Any, name: str) -> Role:
