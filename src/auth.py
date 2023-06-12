@@ -25,7 +25,7 @@ templates = Jinja2Templates(directory="templates")
 async def login(request: Request):
     client = laurel.create_client("laurel")
     # initiate login by redirecting to laurel
-    return await client.authorize_redirect(env.url + "auth/callback")
+    return await client.authorize_redirect(request, env.url + "auth/callback")
 
 
 async def callback(request: Request):
