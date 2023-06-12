@@ -22,43 +22,46 @@ laurel.register(
 templates = Jinja2Templates(directory="templates")
 
 
-# initiate login by redirecting to laurel
-async def login(req: Request):
+async def login(request: Request):
     client = laurel.create_client("laurel")
+    # initiate login by redirecting to laurel
     return await client.authorize_redirect(env.url + "auth/callback")
 
 
-# receives the laurel data after login
-async def callback(req: Request):
+async def callback(request: Request):
     client = laurel.create_client("laurel")
-    token = await client.authorize_access_token(req)
-    req.session["laurel"] = token["userinfo"]
-    return RedirectResponse(req.url_for("auth_token"))
+    # receives the laurel data after login
+    token = await client.authorize_access_token(request)
+    request.session["laurel"] = token["userinfo"]
+    return RedirectResponse(request.url_for("auth_token"))
 
 
-# logging out by logging out of all laurel services and redirect to login here
-async def logout(req: Request):
-    req.session.clear()
+async def logout(request: Request):
+    # logout locally
+    request.session.clear()
+    # logging out by logging out of all laurel services and redirect to login here
     return RedirectResponse(
-        req,
+        request,
         "https://auth.laurel.informatik.uni-freiburg.de/auth/logout?redirect="
-        + req.url_for("auth_login"),
+        + request.url_for("auth_login"),
     )
 
 
-# stores authorization token in thread shared state for bot to access
-async def token(req: Request):
-    user = req.session.get("laurel")
+async def token(request: Request):
+    user = request.session.get("laurel")
     if user is None:
-        return RedirectResponse(req.url_for("auth_login"))
+        return RedirectResponse(request.url_for("auth_login"))
     token = str(uuid4())
+
+    # stores authorization token along user information in thread shared state for bot to access
     state[token] = user
 
+    # key is valid for 5 minutes
     async def remove_key():
         await asyncio.sleep(5 * 60)
         state.pop(token, None)
 
     asyncio.create_task(remove_key())
     return templates.TemplateResponse(
-        "token.html", {"request": req, "token": token, "sub": user["sub"]}
+        "token.html", {"request": request, "token": token, "sub": user["sub"]}
     )

@@ -1,224 +1,134 @@
-from datetime import datetime
 from multiprocessing import Manager
 from random import randint
 import re
+from typing import Any
 from discord import (
-    ButtonStyle,
     Client,
     Colour,
-    Embed,
     Forbidden,
     Intents,
     Interaction,
+    InteractionResponse,
     Member,
+    Message,
     NotFound,
     PermissionOverwrite,
     Role,
+    TextChannel,
     VoiceState,
     utils,
 )
-from discord.ui import View, Button, Modal, TextInput
 
-from .env import env
 from .data import degrees
+from .ui import (
+    AccountNameInput,
+    about_embed,
+    AuthTokenInput,
+    auth_token_input,
+    auth_token_button,
+    auth_view,
+    auth_embed,
+    auth_logout_success,
+    auth_login_success,
+    auth_login_failure,
+    AccountTokenInput,
+    account_logout_button,
+    account_update_success,
+    account_token_input,
+    account_update_button,
+    account_name_input,
+    account_name_invalid,
+    account_name_update_success,
+    account_name_button,
+    account_view,
+    account_embed,
+)
 
+# thread shared state between fastapi and discord bot
 state = Manager().dict()
 
 
 class Bot(Client):
     def __init__(self, **options) -> None:
+        # get admin permissions
         intents = Intents.all()
         super().__init__(intents=intents, **options)
 
     async def on_ready(self):
+        # create #about message
         await self.about()
-        await self.authentication()
+        # create #authenticate message
+        await self.authenticate()
+        # create #accounts message
         await self.account()
 
     async def about(self):
         # get about channel
-        chan = utils.get(self.guilds[0].text_channels, name="about")
+        message = await last_channel_message(channel_by_name("about"))
+        # update message
+        await message.edit(content="", embed=about_embed)
 
-        # add message if not exists
-        try:
-            msg = await chan.fetch_message(chan.last_message_id)
-        except NotFound:
-            msg = await chan.send(content="...")
+    async def authenticate(self):
+        # get authenticate channel
+        message = await last_channel_message(channel_by_name("authenticate"))
 
-        embed = Embed(
-            type="rich",
-            title="About this Discord Server",
-            colour=Colour.blue(),
-            timestamp=datetime.now(),
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam.",
-        )
+        # try logging in on token input
+        async def on_login(input: AuthTokenInput, interaction: Interaction):
+            await login(str(input.token), interaction)
 
-        embed.add_field(
-            name="1. Orga",
-            value="Donec sapien turpis, aliquet sit amet magna quis, ornare ullamcorper est. Morbi pharetra suscipit ex, vel feugiat tortor facilisis quis. Pellentesque nec leo in lacus malesuada varius ut eu erat. Nam dignissim aliquam orci, non lobortis quam imperdiet sollicitudin. Sed dapibus vulputate purus quis tincidunt. Sed non ipsum eget nibh hendrerit gravida a ac nibh. Cras ut tempor elit.",
-            inline=False,
-        )
-        embed.add_field(
-            name="2. Rules",
-            value="Vestibulum et consequat dolor, tincidunt molestie odio. Maecenas orci elit, pulvinar vel lorem vitae, tristique feugiat libero. Sed sit amet purus vitae lectus porttitor dignissim. Fusce lacinia augue turpis, vel ullamcorper ante ultricies eget. Curabitur vulputate ornare quam, eu gravida orci aliquet a. Pellentesque eget mi mi. Donec sollicitudin cursus velit, vel aliquam risus vehicula quis. Nulla lacinia enim a nibh malesuada, a imperdiet nulla imperdiet. Aliquam rutrum pulvinar purus, in porttitor turpis interdum vel.",
-            inline=False,
-        )
+        auth_token_input.on_submit = on_login
 
-        await msg.edit(content="", embed=embed)
+        # opens the token modal
+        async def auth_token_modal(interaction: Interaction):
+            await interaction.response.send_modal(auth_token_input)
 
-    async def authentication(self):
-        # get login channel
-        chan = utils.get(self.guilds[0].text_channels, name="authenticate")
+        auth_token_button.callback = auth_token_modal
 
-        # add message if not exists
-        try:
-            msg = await chan.fetch_message(chan.last_message_id)
-        except NotFound:
-            msg = await chan.send(content="...")
-
-        # modal that receives the token via input field
-        class TokenInput(Modal, title="Enter Authentication Token"):
-            token = TextInput(
-                label="Token", placeholder="Paste Authentication Token Here"
-            )
-
-            async def on_submit(self, interaction: Interaction):
-                await login(str(self.token), interaction)
-
-        # starts the authentication process
-        async def start_authentication(interaction: Interaction):
-            await interaction.response.send_modal(TokenInput())
-
-        authenticate_button = Button(label="Authenticate", style=ButtonStyle.primary)
-        authenticate_button.callback = start_authentication
-
-        token_button = Button(label="Get Token", url=env.url + "auth/token")
-
-        view = View(timeout=None).add_item(token_button).add_item(authenticate_button)
-
-        embed = Embed(
-            type="rich",
-            title="Login using University Account",
-            url=env.url + "auth/token",
-            colour=Colour.blue(),
-            timestamp=datetime.now(),
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam.",
-        )
-
-        embed.add_field(
-            name="1. Login using Web",
-            value="Donec sapien turpis, aliquet sit amet magna quis, ornare ullamcorper est. Morbi pharetra suscipit ex, vel feugiat tortor facilisis quis. Pellentesque nec leo in lacus malesuada varius ut eu erat. Nam dignissim aliquam orci, non lobortis quam imperdiet sollicitudin. Sed dapibus vulputate purus quis tincidunt. Sed non ipsum eget nibh hendrerit gravida a ac nibh. Cras ut tempor elit.",
-            inline=False,
-        )
-        embed.add_field(
-            name="2. Enter Token",
-            value="Vestibulum et consequat dolor, tincidunt molestie odio. Maecenas orci elit, pulvinar vel lorem vitae, tristique feugiat libero. Sed sit amet purus vitae lectus porttitor dignissim. Fusce lacinia augue turpis, vel ullamcorper ante ultricies eget. Curabitur vulputate ornare quam, eu gravida orci aliquet a. Pellentesque eget mi mi. Donec sollicitudin cursus velit, vel aliquam risus vehicula quis. Nulla lacinia enim a nibh malesuada, a imperdiet nulla imperdiet. Aliquam rutrum pulvinar purus, in porttitor turpis interdum vel.",
-            inline=False,
-        )
-        embed.set_footer(text="Powered by Laurel")
-
-        await msg.edit(content="", embed=embed, view=view)
+        await message.edit(content="", embed=auth_embed, view=auth_view())
 
     async def account(self):
-        chan = utils.get(self.guilds[0].text_channels, name="account")
+        message = await last_channel_message(channel_by_name("account"))
 
-        try:
-            msg = await chan.fetch_message(chan.last_message_id)
-        except NotFound:
-            msg = await chan.send(content="...")
+        account_logout_button.callback = logout
 
-        logout_button = Button(label="Logout", style=ButtonStyle.danger)
-        logout_button.callback = logout
-
-        # modal that receives the token via input field
-        class TokenInput(Modal, title="Enter Authorization Token"):
-            token = TextInput(
-                label="Token", placeholder="Paste Authorization Token Here"
-            )
-
-            async def on_submit(self, interaction: Interaction):
-                if await logout(interaction, message=False) and await login(
-                    str(self.token), interaction, message=False
-                ):
-                    await interaction.response.send_message(
-                        "<succesfully updated university account details>",
-                        ephemeral=True,
-                    )
-
-        # starts the authentication process
-        async def start_update(interaction: Interaction):
-            await interaction.response.send_modal(TokenInput())
-
-        update_button = Button(label="Sync Account", style=ButtonStyle.primary)
-        update_button.callback = start_update
-
-        token_button = Button(label="Get Token", url=env.url + "auth/token")
-
-        class NameInput(Modal, title="Enter Name"):
-            name = TextInput(label="Name", placeholder="Enter Name Here")
-
-            async def on_submit(self, interaction: Interaction):
-                matches = re.findall(r"^\[[a-z0-9]+\]", interaction.user.nick)
-                if len(matches) != 1:
-                    await interaction.response.send_message(
-                        "<name does not follow guidlines `[xy123] name`>",
-                        ephemeral=True,
-                    )
-                    return
-                try:
-                    await interaction.user.edit(nick=f"{matches[0]} {self.name}")
-                except Forbidden:
-                    # user is server owner
-                    pass
-                await interaction.response.send_message(
-                    "<name update successful>", ephemeral=True
+        # try logging out and in on token input
+        async def on_update(input: AccountTokenInput, interaction: Interaction):
+            if await logout(interaction, message=False) and await login(
+                str(input.token), interaction, message=False
+            ):
+                await send_response_message(
+                    interaction.response, account_update_success
                 )
 
-        async def update_name(interaction: Interaction):
-            await interaction.response.send_modal(NameInput())
+        account_token_input.on_submit = on_update
 
-        update_name_button = Button(label="Set Name", style=ButtonStyle.secondary)
-        update_name_button.callback = update_name
+        # opens token modal for sync
+        async def account_token_modal(interaction: Interaction):
+            await interaction.response.send_modal(account_token_input)
 
-        view = (
-            View(timeout=None)
-            .add_item(logout_button)
-            .add_item(token_button)
-            .add_item(update_button)
-            .add_item(update_name_button)
-        )
+        account_update_button.callback = account_token_modal
 
-        embed = Embed(
-            type="rich",
-            title="Manage Your Connected Account",
-            colour=Colour.blue(),
-            timestamp=datetime.now(),
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam.",
-        )
+        # renames the user on the server
+        async def on_rename(input: AccountNameInput, interaction: Interaction):
+            await update_name(str(input.name), interaction)
 
-        embed.add_field(
-            name="1. Disconnect University Account",
-            value="Donec sapien turpis, aliquet sit amet magna quis, ornare ullamcorper est. Morbi pharetra suscipit ex, vel feugiat tortor facilisis quis. Pellentesque nec leo in lacus malesuada varius ut eu erat. Nam dignissim aliquam orci, non lobortis quam imperdiet sollicitudin. Sed dapibus vulputate purus quis tincidunt. Sed non ipsum eget nibh hendrerit gravida a ac nibh. Cras ut tempor elit.",
-            inline=False,
-        )
-        embed.add_field(
-            name="2. Sync University Account",
-            value="Vestibulum et consequat dolor, tincidunt molestie odio. Maecenas orci elit, pulvinar vel lorem vitae, tristique feugiat libero. Sed sit amet purus vitae lectus porttitor dignissim. Fusce lacinia augue turpis, vel ullamcorper ante ultricies eget. Curabitur vulputate ornare quam, eu gravida orci aliquet a. Pellentesque eget mi mi. Donec sollicitudin cursus velit, vel aliquam risus vehicula quis. Nulla lacinia enim a nibh malesuada, a imperdiet nulla imperdiet. Aliquam rutrum pulvinar purus, in porttitor turpis interdum vel.",
-            inline=False,
-        )
-        embed.add_field(
-            name="3. Sync Discord Name",
-            value="Vestibulum et consequat dolor, tincidunt molestie odio. Maecenas orci elit, pulvinar vel lorem vitae, tristique feugiat libero. Sed sit amet purus vitae lectus porttitor dignissim. Fusce lacinia augue turpis, vel ullamcorper ante ultricies eget. Curabitur vulputate ornare quam, eu gravida orci aliquet a. Pellentesque eget mi mi. Donec sollicitudin cursus velit, vel aliquam risus vehicula quis. Nulla lacinia enim a nibh malesuada, a imperdiet nulla imperdiet. Aliquam rutrum pulvinar purus, in porttitor turpis interdum vel.",
-            inline=False,
-        )
-        embed.set_footer(text="Powered by Laurel")
+        account_name_input.on_submit = on_rename
+        
+        # opens name modal for new name
+        async def account_name_modal(interaction: Interaction):
+            await interaction.response.send_modal(account_name_input)
 
-        await msg.edit(content="", embed=embed, view=view)
+        account_name_button.callback = account_name_modal
+
+        await message.edit(content="", embed=account_embed, view=account_view())
 
     async def voice(self, member: Member, before: VoiceState, after: VoiceState):
         create = utils.get(member.guild.voice_channels, name="create")
         category = utils.get(member.guild.categories, name="voice")
+
+        # user joined #create
         if before.channel != after.channel and after.channel == create:
+            # create channel with permissions
             channel = await member.guild.create_voice_channel(
                 name=f"{member.display_name}",
                 overwrites={
@@ -245,6 +155,7 @@ class Bot(Client):
                 category=category,
                 position=1,
             )
+            # move user to channel
             await member.move_to(channel)
         if (
             before.channel != after.channel
@@ -252,28 +163,11 @@ class Bot(Client):
             and not before.channel.members
             and before.channel.name != "create"
         ):
+            # delete empty channels except #create
             await before.channel.delete()
 
     async def channels(self):
         pass
-
-
-async def logout(interaction: Interaction, message=True) -> bool:
-    roles = list(
-        filter(
-            lambda role: role.name != "Admin" and role.name != "@everyone",
-            interaction.user.roles,
-        )
-    )
-    await interaction.user.remove_roles(*roles)
-    try:
-        await interaction.user.edit(nick=None)
-    except Forbidden:
-        # user is server owner
-        pass
-    if message:
-        await interaction.response.send_message("<logged out>", ephemeral=True)
-    return True
 
 
 async def login(token: str, interaction: Interaction, message=True) -> bool:
@@ -282,30 +176,16 @@ async def login(token: str, interaction: Interaction, message=True) -> bool:
         # get user information
         user = state[token]
 
-        # creates a role if it does not exist
-        async def role(name: str) -> Role:
-            role = utils.get(interaction.guild.roles, name=name)
-            if role is None:
-                role = await interaction.guild.create_role(
-                    name=name,
-                    colour=Colour.from_rgb(
-                        randint(0, 255), randint(0, 255), randint(0, 255)
-                    ),
-                    hoist=True,
-                )
-                await role.edit(position=2)
-
-            return role
-
         # assign according roles
         studies = (
             degrees.get(user["studies"], user["studies"])
             if user["studies"] is not None
             else "Employee"
         )
+
         await interaction.user.add_roles(
             utils.get(interaction.guild.roles, name="Authenticated"),
-            await role(studies),
+            await get_or_create_role(interaction.guild, studies),
         )
 
         # remove account from name before
@@ -318,12 +198,79 @@ async def login(token: str, interaction: Interaction, message=True) -> bool:
 
         # send success message
         if message:
-            await interaction.response.send_message(
-                f"<logged in as {user['sub']}>", ephemeral=True
-            )
+            await send_response_message(interaction.response, auth_login_success)
         return True
+
     # token is invalid
     else:
         # send failure message
-        await interaction.response.send_message("<token not found>", ephemeral=True)
+        await send_response_message(interaction.response, auth_login_failure)
         return False
+
+
+async def logout(interaction: Interaction, message=True) -> bool:
+    # get all roles to remove
+    roles = list(
+        filter(
+            lambda role: role.name != "Admin" and role.name != "@everyone",
+            interaction.user.roles,
+        )
+    )
+
+    await interaction.user.remove_roles(*roles)
+
+    # reset username
+    try:
+        await interaction.user.edit(nick=None)
+    except Forbidden:
+        # user is server owner
+        pass
+
+    if message:
+        await send_response_message(interaction.response, auth_logout_success)
+    return True
+
+
+async def update_name(name: str, interaction: Interaction):
+    matches = re.findall(r"^\[[a-z0-9]+\]", interaction.user.nick)
+    if len(matches) != 1:
+        await send_response_message(account_name_invalid)
+        return
+    try:
+        await interaction.user.edit(nick=f"{matches[0]} {name}")
+    except Forbidden:
+        # user is server owner
+        pass
+    await send_response_message(account_name_update_success)
+
+
+async def get_or_create_role(guild: Any, name: str) -> Role:
+    role = utils.get(guild.roles, name=name)
+    if role is None:
+        role = await guild.create_role(
+            name=name,
+            colour=Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)),
+            hoist=True,
+        )
+        await role.edit(position=2)
+
+    return role
+
+
+async def send_response_message(response: InteractionResponse, message: str):
+    await response.send_message(message, ephemeral=True, delete_after=10)
+
+
+async def last_channel_message(channel: TextChannel) -> Message:
+    try:
+        message = await channel.fetch_message(channel.last_message_id)
+    except NotFound:
+        message = await channel.send(content="...")
+    return message
+
+
+def channel_by_name(bot: Bot, name: str, category: str | None = None):
+    def find(channel: TextChannel) -> bool:
+        channel.name == name and (category == None or channel.category.name == category)
+
+    return utils.find(find, bot.guilds[0].text_channels)

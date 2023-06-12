@@ -38,23 +38,24 @@ async def startup():
 
 @app.get("/auth/login")
 async def auth_login(request: Request):
-    await login(request)
+    return await login(request)
 
 
 @app.get("/auth/logout")
-async def logout(request: Request):
-    await logout(request)
+async def auth_logout(request: Request):
+    return await logout(request)
 
 
 @app.get("/auth/token")
-@limiter.limit("60/minute")
+# maximum of 1 token every six second
+@limiter.limit("10/minute")
 async def auth_token(request: Request):
-    await token(request)
+    return await token(request)
 
 
 @app.get("/auth/callback")
 async def auth_callback(request: Request):
-    await callback(request)
+    return await callback(request)
 
 
 ## Discord Bot ##########################################################################
