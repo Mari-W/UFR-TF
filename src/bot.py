@@ -1,6 +1,7 @@
 from multiprocessing import Manager
 from random import randint
 import re
+from types import MethodType
 from typing import Any
 from discord import (
     Client,
@@ -74,9 +75,10 @@ class Bot(Client):
 
         # try logging in on token input
         async def on_login(input: AuthTokenInput, interaction: Interaction):
+            print(1)
             await login(str(input.token), interaction)
 
-        auth_token_input.on_submit = on_login
+        auth_token_input.on_submit = MethodType(on_login, auth_token_input)
 
         # opens the token modal
         async def auth_token_modal(interaction: Interaction):
@@ -100,7 +102,7 @@ class Bot(Client):
                     interaction.response, account_update_success
                 )
 
-        account_token_input.on_submit = on_update
+        account_token_input.on_submit = MethodType(on_update, account_token_input)
 
         # opens token modal for sync
         async def account_token_modal(interaction: Interaction):
@@ -112,7 +114,7 @@ class Bot(Client):
         async def on_rename(input: AccountNameInput, interaction: Interaction):
             await update_name(str(input.name), interaction)
 
-        account_name_input.on_submit = on_rename
+        account_name_input.on_submit = MethodType(on_rename, account_name_input)
 
         # opens name modal for new name
         async def account_name_modal(interaction: Interaction):
@@ -271,6 +273,8 @@ async def last_channel_message(channel: TextChannel) -> Message:
 
 def channel_by_name(bot: Bot, name: str, category: str | None = None):
     def find(channel: TextChannel) -> bool:
-        return channel.name == name and (category == None or channel.category.name == category)
+        return channel.name == name and (
+            category == None or channel.category.name == category
+        )
 
     return utils.find(find, bot.guilds[0].text_channels)

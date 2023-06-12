@@ -35,7 +35,6 @@ auth_embed_enter_token = "Lorem ipsum dolor sit amet, consectetur adipiscing eli
 class AuthTokenInput(Modal, title="Enter Authentication Token"):
     token = TextInput(label="Token", placeholder="Authentication Token")
 
-
 auth_token_input = AuthTokenInput()
 
 auth_token_button = Button(label="Authenticate", style=ButtonStyle.primary)
