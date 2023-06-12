@@ -41,9 +41,7 @@ async def logout(request: Request):
     request.session.clear()
     # logging out by logging out of all laurel services and redirect to login here
     return RedirectResponse(
-        request,
-        "https://auth.laurel.informatik.uni-freiburg.de/auth/logout?redirect="
-        + str(request.url_for("auth_login")),
+        env.laurel_logout_url + "?redirect=" + str(request.url_for("auth_login")),
     )
 
 
