@@ -43,7 +43,7 @@ async def logout(request: Request):
     return RedirectResponse(
         request,
         "https://auth.laurel.informatik.uni-freiburg.de/auth/logout?redirect="
-        + request.url_for("auth_login"),
+        + str(request.url_for("auth_login")),
     )
 
 
