@@ -134,32 +134,7 @@ class Bot(Client):
             # create channel with permissions
             channel = await member.guild.create_voice_channel(
                 name=f"{member.display_name}",
-                overwrites={
-                    member: PermissionOverwrite(
-                        manage_channels=True
-                    ),
-                    utils.get(
-                        member.guild.roles, name="@everyone"
-                    ) : PermissionOverwrite(
-                        view_channel=False,
-                    ),
-                    utils.get(
-                        member.guild.roles, name="Authenticated"
-                    ): PermissionOverwrite(
-                        add_reactions=True,
-                        attach_files=True,
-                        connect=True,
-                        embed_links=True,
-                        external_emoji=True,
-                        external_stickers=True,
-                        read_message_history=True,
-                        read_message=True,
-                        send_message=True,
-                        speak=True,
-                        stream=True,
-                        view_channel=True,
-                    ),
-                },
+                
                 category=category,
                 position=1,
             )
