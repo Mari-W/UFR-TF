@@ -137,7 +137,12 @@ class Bot(Client):
                 name=f"{member.display_name}",
                 overwrites={
                     member: PermissionOverwrite(
-                        manage_channels=True, view_channel=False
+                        manage_channels=True
+                    ),
+                    utils.get(
+                        member.guild.roles, name="@everyone"
+                    ) : PermissionOverwrite(
+                        view_channel=False,
                     ),
                     utils.get(
                         member.guild.roles, name="Authenticated"
