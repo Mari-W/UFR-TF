@@ -155,7 +155,7 @@ class Bot(Client):
                         speak=True,
                         stream=True,
                         use_application_commands=True,
-                        use_embedded_activites=True,
+                        use_embedded_activities=True,
                         use_external_emojis=True,
                         use_external_sounds=True,
                         use_external_stickers=True,
