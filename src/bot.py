@@ -139,17 +139,6 @@ class Bot(Client):
                         view_channel=False,
                     ),
                     utils.get(member.guild.roles, name="Authenticated"): PermissionOverwrite(
-                        add_reactions=True,
-                        attach_files=True,
-                        connect=True,
-                        embed_links=True,
-                        external_emoji=True,
-                        external_stickers=True,
-                        read_message_history=True,
-                        read_message=True,
-                        send_message=True,
-                        speak=True,
-                        stream=True,
                         view_channel=True,
                     ),
                     member: PermissionOverwrite(
