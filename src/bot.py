@@ -77,7 +77,6 @@ class Bot(Client):
 
         # try logging in on token input
         async def on_login(input: AuthTokenInput, interaction: Interaction):
-            print(1)
             await login(str(input.token), interaction)
 
         auth_token_input.on_submit = MethodType(on_login, auth_token_input)
