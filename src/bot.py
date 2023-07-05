@@ -47,7 +47,8 @@ from .ui import (
     channel_embed,
     ChannelRequestAcceptInput,
     create_channel_request_accept_embed,
-    accept_channel_request_send
+    accept_channel_request_send,
+    accept_channel_send
 )
 from .env import env
 
@@ -320,6 +321,9 @@ async def forward_request(input: ChannelRequestInput, request_interaction: Inter
             },
             category=utils.get(accept_interaction.user.guild.categories, name="channels")
         )
+
+        await send_response_message(accept_interaction.response, accept_channel_send)
+        accept_interaction.message.edit(view=None)
 
     view, embed = create_channel_request_accept_embed(input, request_interaction, on_accept)
 

@@ -146,6 +146,8 @@ channel_embed.set_footer(text="Powered by Laurel")
 
 ## #accept channels #############################################################################
 
+accept_channel_send="Accepted channel Request Successfully"
+
 accept_channel_request_send="Requested successfully"
 
 class ChannelRequestAcceptInput(Modal, title="Request a Text Channel"):
