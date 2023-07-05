@@ -43,6 +43,11 @@ from .ui import (
     account_name_button,
     account_view,
     account_embed,
+    ChannelRequestInput,
+    channel_request_input,
+    channels_request_button,
+    channel_view,
+    channel_embed,
 )
 
 # thread shared state between fastapi and discord bot
@@ -125,6 +130,18 @@ class Bot(Client):
 
         await message.edit(content="", embed=account_embed, view=account_view())
 
+    async def channels(self):
+        # get channels channel
+        message = await last_channel_message(channel_by_name(self, "channels"))
+
+        # opens the request modal
+        async def channel_request_modal(interaction: Interaction):
+            await interaction.response.send_modal(channel_request_input)
+
+        channels_request_button.callback = channel_request_modal
+
+        await message.edit(content="", embed=channel_embed, view=channel_view())
+
     async def voice(self, member: Member, before: VoiceState, after: VoiceState):
         create = utils.get(member.guild.voice_channels, name="create")
         category = utils.get(member.guild.categories, name="voice")
@@ -179,9 +196,6 @@ class Bot(Client):
         ):
             # delete empty channels except #create
             await before.channel.delete()
-
-    async def channels(self):
-        pass
 
 
 ## Functionality ########################################################################

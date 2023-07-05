@@ -113,3 +113,31 @@ account_embed.add_field(
     inline=False,
 )
 account_embed.set_footer(text="Powered by Laurel")
+
+## #channels #############################################################################
+
+
+class ChannelRequestInput(Modal, title="Request a Text Channel"):
+    name_of_lecture = TextInput(label="Name", placeholder="Enter Name of Lecture Here")
+    kind_of_lecture = TextInput(label="Kind", placeholder="Lecture / Seminar / ...")
+    description_of_lecture = TextInput(label="Description", placeholder="Enter Description Here")
+
+
+channel_request_input = ChannelRequestInput()
+
+channel_view = lambda: (
+    View(timeout=None)
+    .add_item(channels_request)
+)
+
+channels_request_button = Button(label="Request", style=ButtonStyle.danger)
+
+channel_embed = Embed(
+    type="richt",
+    title="Request a text channel",
+    colour=Colour.blue(),
+    timestamp=datetime.now(),
+    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
+)
+
+channel_embed.set_footer(text="Powered by Laurel")
