@@ -152,7 +152,7 @@ class ChannelRequestAcceptInput(Modal, title="Request a Text Channel"):
     name_of_channel = TextInput(label="Suggested Name of Channel")
 
 
-def create_channel_request_accept_embed(input: ChannelRequestInput, interaction: Interaction, on_accept: Callable[[ChannelRequestAcceptInput, Interaction]]) -> tuple[View, Embed]:
+def create_channel_request_accept_embed(input: ChannelRequestInput, interaction: Interaction, on_accept: Callable[[ChannelRequestAcceptInput, Interaction], None]) -> tuple[View, Embed]:
 
 
     accept_channel_request_view = View(timeout=None).add_item(Button(label="Accept", style=ButtonStyle.green))
