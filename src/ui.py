@@ -151,12 +151,12 @@ decline_channel_send="Declined channel Request Successfully"
 
 accept_channel_request_send="Requested successfully"
 
-class ChannelRequestAcceptInput(Modal, title="Request a Text Channel"):
+class ChannelRequestAcceptInput(Modal, title="Requested Text Channel"):
     name_of_lecture = TextInput(label="Name of Lecture")
     kind_of_lecture = TextInput(label="Kind of Lecture")
     name_of_channel = TextInput(label="Name of Channel")
 
-class ChannelRequestDeclineInput(Modal, title="Decline a requested text channel"):
+class ChannelRequestDeclineInput(Modal, title="Declined Text Channel"):
     declined_massage = TextInput(label="Declined because")
 
 
@@ -184,12 +184,14 @@ def create_channel_request_accept_embed(input: ChannelRequestInput, interaction:
 
 
     accept_channel_request_button = Button(label="Accept", style=ButtonStyle.green)
-    decline_channel_request_button = Button(labdel="Decline", style=ButtonStyle.danger)
+    decline_channel_request_button = Button(label="Decline", style=ButtonStyle.danger)
 
     accept_channel_request_button.callback = channel_request_accept_modal
     decline_channel_request_button.callback = channel_request_decline_modal
 
-    accept_channel_request_view = View(timeout=None).add_item(accept_channel_request_button).add_item(decline_channel_request_button)
+    accept_channel_request_view = (View(timeout=None)
+                                   .add_item(accept_channel_request_button)
+                                   .add_item(decline_channel_request_button))
 
     accept_channel_request_embed = Embed(
         type="rich",

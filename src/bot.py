@@ -290,6 +290,7 @@ async def update_name(name: str, interaction: Interaction):
 
 
 async def forward_request(input: ChannelRequestInput, request_interaction: Interaction):
+    
     async def on_accept(channel_request_accept_input: ChannelRequestAcceptInput, accept_interaction: Interaction):
         await accept_interaction.user.guild.create_text_channel(
             name=channel_request_accept_input.name_of_channel.value,
