@@ -323,7 +323,7 @@ async def forward_request(input: ChannelRequestInput, request_interaction: Inter
     view, embed = create_channel_request_accept_embed(input, request_interaction, on_accept)
 
     channel = utils.get(request_interaction.user.guild.channels, name="accept")
-    channel.send(embed=embed, view=view)
+    await channel.send(embed=embed, view=view)
 
 
 ## Utils ################################################################################
