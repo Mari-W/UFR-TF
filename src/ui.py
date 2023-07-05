@@ -82,7 +82,6 @@ account_token_button = Button(label="Get Token", url=env.url + "auth/token")
 class AccountNameInput(Modal, title="Change Nickname"):
     name = TextInput(label="New Nickname")
 
-account_name_input = AccountNameInput()
 account_name_button = Button(label="Set Name", style=ButtonStyle.secondary)
 
 account_view = lambda: (

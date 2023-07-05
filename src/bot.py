@@ -37,7 +37,6 @@ from .ui import (
     account_update_success,
     account_token_input,
     account_update_button,
-    account_name_input,
     account_name_invalid,
     account_name_update_success,
     account_name_button,
@@ -123,10 +122,9 @@ class Bot(Client):
         async def on_rename(input: AccountNameInput, interaction: Interaction):
             await update_name(input.name.value, interaction)
 
-        account_name_input.on_submit = MethodType(on_rename, account_name_input)
-
         # opens name modal for new name
         async def account_name_modal(interaction: Interaction):
+            account_name_input = AccountNameInput()
             account_name_input.on_submit = MethodType(on_rename, account_name_input)
             await interaction.response.send_modal(account_name_input)
 
