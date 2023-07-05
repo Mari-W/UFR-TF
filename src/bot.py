@@ -127,9 +127,7 @@ class Bot(Client):
 
         # opens name modal for new name
         async def account_name_modal(interaction: Interaction):
-            if account_name_modal is None:
-                await send_response_message(interaction.response, "fuck you")
-                return
+            account_name_input.on_submit = MethodType(on_rename, account_name_input)
             await interaction.response.send_modal(account_name_input)
 
         account_name_button.callback = account_name_modal
