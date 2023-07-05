@@ -268,7 +268,7 @@ async def logout(interaction: Interaction, message=True) -> bool:
 async def update_name(name: str, interaction: Interaction):
     matches = re.findall(r"^\[[a-z0-9]+\]", interaction.user.nick)
     if len(matches) != 1:
-        await send_response_message(account_name_invalid)
+        await send_response_message(interaction.response, account_name_invalid)
         return
     try:
         await interaction.user.edit(nick=f"{matches[0]} {name}")

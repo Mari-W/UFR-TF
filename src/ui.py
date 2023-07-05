@@ -62,6 +62,9 @@ account_update_success = "Sync successful."
 account_name_invalid = "Your name does not follow the nameing guidelines. Please contact a server administrator."
 account_name_update_success = "Name update successful."
 account_embed_description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
+account_embed_disconnect = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
+account_embed_sync = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
+account_embed_name = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
 
 account_logout_button = Button(label="Logout", style=ButtonStyle.danger)
 
@@ -100,17 +103,17 @@ account_embed = Embed(
 
 account_embed.add_field(
     name="1. Disconnect University Account",
-    value="Donec sapien turpis, aliquet sit amet magna quis, ornare ullamcorper est. Morbi pharetra suscipit ex, vel feugiat tortor facilisis quis. Pellentesque nec leo in lacus malesuada varius ut eu erat. Nam dignissim aliquam orci, non lobortis quam imperdiet sollicitudin. Sed dapibus vulputate purus quis tincidunt. Sed non ipsum eget nibh hendrerit gravida a ac nibh. Cras ut tempor elit.",
+    value=account_embed_disconnect,
     inline=False,
 )
 account_embed.add_field(
     name="2. Sync University Account",
-    value="Vestibulum et consequat dolor, tincidunt molestie odio. Maecenas orci elit, pulvinar vel lorem vitae, tristique feugiat libero. Sed sit amet purus vitae lectus porttitor dignissim. Fusce lacinia augue turpis, vel ullamcorper ante ultricies eget. Curabitur vulputate ornare quam, eu gravida orci aliquet a. Pellentesque eget mi mi. Donec sollicitudin cursus velit, vel aliquam risus vehicula quis. Nulla lacinia enim a nibh malesuada, a imperdiet nulla imperdiet. Aliquam rutrum pulvinar purus, in porttitor turpis interdum vel.",
+    value=account_embed_sync,
     inline=False,
 )
 account_embed.add_field(
     name="3. Sync Discord Name",
-    value="Vestibulum et consequat dolor, tincidunt molestie odio. Maecenas orci elit, pulvinar vel lorem vitae, tristique feugiat libero. Sed sit amet purus vitae lectus porttitor dignissim. Fusce lacinia augue turpis, vel ullamcorper ante ultricies eget. Curabitur vulputate ornare quam, eu gravida orci aliquet a. Pellentesque eget mi mi. Donec sollicitudin cursus velit, vel aliquam risus vehicula quis. Nulla lacinia enim a nibh malesuada, a imperdiet nulla imperdiet. Aliquam rutrum pulvinar purus, in porttitor turpis interdum vel.",
+    value=account_embed_name,
     inline=False,
 )
 account_embed.set_footer(text="Powered by Laurel")
