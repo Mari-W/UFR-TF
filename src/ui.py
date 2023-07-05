@@ -146,6 +146,8 @@ channel_embed.set_footer(text="Powered by Laurel")
 
 ## #accept channels #############################################################################
 
+accept_channel_request_send="Created channel successfully"
+
 class ChannelRequestAcceptInput(Modal, title="Request a Text Channel"):
     name_of_lecture = TextInput(label="Name of Lecture")
     kind_of_lecture = TextInput(label="Kind of Lecture")
