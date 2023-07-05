@@ -157,7 +157,7 @@ class ChannelRequestAcceptInput(Modal, title="Request a Text Channel"):
     name_of_channel = TextInput(label="Name of Channel")
 
 class ChannelRequestDeclineInput(Modal, title="Decline a requested text channel"):
-    declined_massage = TextInput(lable="Declined because:")
+    declined_massage = TextInput(label="Declined because")
 
 
 def create_channel_request_accept_embed(input: ChannelRequestInput, interaction: Interaction, on_accept: Callable[[ChannelRequestAcceptInput, Interaction], None], on_decline: Callable[[ChannelRequestAcceptInput, Interaction], None]) -> tuple[View, Embed]:
