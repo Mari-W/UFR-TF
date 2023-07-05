@@ -69,6 +69,8 @@ class Bot(Client):
         await self.authenticate()
         # create #accounts message
         await self.account()
+        # create #channels message
+        await self.channels()
 
     async def about(self):
         # get about channel
