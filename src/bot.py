@@ -268,17 +268,16 @@ async def logout(interaction: Interaction, message=True) -> bool:
 
 
 async def update_name(name: str, interaction: Interaction):
-    matches = re.findall(r"^\[[a-z0-9]+\]", interaction.user.nick)
-    print(interaction.user.nick)
+    matches = re.findall(r"^\[[a-z0-9]+\]", str(interaction.user.nick))
     if len(matches) != 1:
         await send_response_message(interaction.response, account_name_invalid)
-        return
-    try:
-        await interaction.user.edit(nick=f"{matches[0]} {name}")
-    except Forbidden:
-        # user is server owner
-        pass
-    await send_response_message(interaction.response, account_name_update_success)
+    else:
+        try:
+            await interaction.user.edit(nick=f"{matches[0]} {name}")
+        except Forbidden:
+            # user is server owner
+            pass
+        await send_response_message(interaction.response, account_name_update_success)
 
 
 ## Utils ################################################################################
