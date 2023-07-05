@@ -42,10 +42,12 @@ from .ui import (
     account_view,
     account_embed,
     ChannelRequestInput,
-    channel_request_input,
     channels_request_button,
+    channel_request_send,
     channel_view,
     channel_embed,
+    ChannelRequestAcceptInput,
+    create_channel_request_accept_embed,
 )
 from .env import env
 
@@ -137,7 +139,13 @@ class Bot(Client):
 
         # opens the request modal
         async def channel_request_modal(interaction: Interaction):
+            channel_request_input = ChannelRequestInput()
+            channel_request_input.on_submit = MethodType(on_request, channel_request_input)
             await interaction.response.send_modal(channel_request_input)
+
+        # sends the rquest to admin channel
+        async def on_request(input: ChannelRequestInput, interaction: Interaction):
+            await forward_request(input, interaction)
 
         channels_request_button.callback = channel_request_modal
 
@@ -276,6 +284,47 @@ async def update_name(name: str, interaction: Interaction):
             # user is server owner
             pass
         await send_response_message(interaction.response, account_name_update_success)
+
+
+async def forward_request(input: ChannelRequestInput, request_interaction: Interaction):
+
+    async def on_accept(channel_request_accept_input: ChannelRequestAcceptInput, accept_interaction: Interaction):
+        await accept_interaction.user.guild.create_text_channel(
+            name=channel_request_accept_input.name_of_channel.value,
+            overwrites={
+                utils.get(
+                    accept_interaction.user.guild.roles, name="@everyone"
+                ): PermissionOverwrite(
+                    view_channel=False,
+                ),
+                utils.get(
+                    accept_interaction.user.guild.roles, name="Authenticated"
+                ): PermissionOverwrite(
+                    add_reactions=True,
+                    attach_files=True,
+                    create_instant_invite=True,
+                    create_public_threads=True,
+                    embed_links=True,
+                    external_emojis=True,
+                    external_stickers=True,
+                    read_message_history=True,
+                    read_messages=True,
+                    send_messages=True,
+                    send_messages_in_threads=True,
+                    send_voice_messages=True,
+                    use_application_commands=True,
+                    use_embedded_activities=True,
+                    use_external_emojis=True,
+                    use_external_stickers=True
+                )
+            },
+            category=utils.get(accept_interaction.user.guild.categories, name="channels")
+        )
+
+    view, embed = create_channel_request_accept_embed(input, request_interaction, on_accept)
+
+    channel = utils.get(request_interaction.user.guild.channels, name="accept")
+    channel.send(embed=embed, view=view)
 
 
 ## Utils ################################################################################

@@ -1,6 +1,9 @@
 from datetime import datetime
-from discord import ButtonStyle, Colour, Embed
+from typing import Callable
+from discord import ButtonStyle, Colour, Embed, Interaction
 from discord.ui import View, Button, Modal, TextInput
+
+from types import MethodType
 
 from .env import env
 
@@ -114,15 +117,14 @@ account_embed.set_footer(text="Powered by Laurel")
 
 ## #channels #############################################################################
 
+channel_request_send="Request send successfully"
+
 channels_embed_description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
 
 class ChannelRequestInput(Modal, title="Request a Text Channel"):
-    name_of_lecture = TextInput(label="Name", placeholder="Enter Name of Lecture Here")
-    kind_of_lecture = TextInput(label="Kind", placeholder="Lecture / Seminar / ...")
-    description_of_lecture = TextInput(label="Description", placeholder="Enter Description Here")
-
-
-channel_request_input = ChannelRequestInput()
+    name_of_lecture = TextInput(label="Name of Lecture", placeholder="eg. SAT-Solving")
+    kind_of_lecture = TextInput(label="Kind of Lecture", placeholder="Lecture / Seminar / BOK / Lab / ...")
+    name_of_channel = TextInput(label="Suggested Name of Channel", placeholder="eg. SAT-Solving", required=False)
 
 channels_request_button = Button(label="Request", style=ButtonStyle.danger)
 
@@ -132,7 +134,7 @@ channel_view = lambda: (
 )
 
 channel_embed = Embed(
-    type="richt",
+    type="rich",
     title="Request a text channel",
     colour=Colour.blue(),
     timestamp=datetime.now(),
@@ -140,3 +142,40 @@ channel_embed = Embed(
 )
 
 channel_embed.set_footer(text="Powered by Laurel")
+
+## #accept channels #############################################################################
+
+class ChannelRequestAcceptInput(Modal, title="Request a Text Channel"):
+    name_of_lecture = TextInput(label="Name of Lecture")
+    kind_of_lecture = TextInput(label="Kind of Lecture")
+    name_of_channel = TextInput(label="Suggested Name of Channel")
+
+
+def create_channel_request_accept_embed(input: ChannelRequestInput, interaction: Interaction, on_accept: Callable[[ChannelRequestAcceptInput, Interaction]]) -> tuple[View, Embed]:
+
+
+    accept_channel_request_view = View(timeout=None).add_item(Button(label="Accept", style=ButtonStyle.green))
+
+    async def channel_request_accept_modal(interaction: Interaction):
+        channel_request_accept_input = ChannelRequestAcceptInput()
+
+        channel_request_accept_input.name_of_channel.default=input.name_of_channel.value
+        channel_request_accept_input.kind_of_lecture.default=input.kind_of_lecture.value
+        channel_request_accept_input.name_of_lecture.default=input.name_of_lecture.value
+
+        channel_request_accept_input.on_submit = MethodType(on_accept, channel_request_accept_input)
+        await interaction.response.send_modal(channel_request_accept_input)
+
+    auth_token_button.callback = channel_request_accept_modal
+
+    accept_channel_request_embed = Embed(
+        type="rich",
+        title="Request a text channel",
+        colour=Colour.blue(),
+        timestamp=datetime.now(),
+        description=f"Requesting a Channel:\n\tName of the Lecture:\t{input.kind_of_lecture.value}\n\tKind of Lecture:\t{input.name_of_channel.value}\n\tName of Channel:\t{input.name_of_lecture.value}"
+    )
+
+    accept_channel_request_embed.set_author(name=interaction.user.nick, icon_url=interaction.user.avatar.url)
+
+    return accept_channel_request_view, accept_channel_request_embed
