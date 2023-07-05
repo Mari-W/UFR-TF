@@ -35,6 +35,7 @@ auth_embed_enter_token = "Lorem ipsum dolor sit amet, consectetur adipiscing eli
 class AuthTokenInput(Modal, title="Enter Authentication Token"):
     token = TextInput(label="Token", placeholder="Authentication Token")
 
+
 auth_token_button = Button(label="Authenticate", style=ButtonStyle.primary)
 auth_link_button = Button(label="Get Token", url=env.url + "auth/token")
 auth_view = (
@@ -59,7 +60,7 @@ auth_embed.set_footer(text="Powered by Laurel")
 account_update_success = "Sync successful."
 account_name_invalid = "Your name does not follow the naming guidelines. Please contact a server administrator."
 account_name_update_success = "Name update successful."
-account_embed_description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
+account_embed_description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
 account_embed_disconnect = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
 account_embed_sync = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
 account_embed_name = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
@@ -74,8 +75,10 @@ class AccountTokenInput(Modal, title="Enter Authorization Token"):
 account_update_button = Button(label="Sync Account", style=ButtonStyle.primary)
 account_token_button = Button(label="Get Token", url=env.url + "auth/token")
 
+
 class AccountNameInput(Modal, title="Change Nickname"):
     name = TextInput(label="New Nickname")
+
 
 account_name_button = Button(label="Set Name", style=ButtonStyle.secondary)
 
@@ -92,7 +95,7 @@ account_embed = Embed(
     title="Manage Your Connected Account",
     colour=Colour.blue(),
     timestamp=datetime.now(),
-    description=account_embed_description
+    description=account_embed_description,
 )
 
 account_embed.add_field(
@@ -114,29 +117,29 @@ account_embed.set_footer(text="Powered by Laurel")
 
 ## #channels #############################################################################
 
-channels_embed_description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
+channels_embed_description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget dia  m."
+
 
 class ChannelRequestInput(Modal, title="Request a Text Channel"):
     name_of_lecture = TextInput(label="Name", placeholder="Enter Name of Lecture Here")
     kind_of_lecture = TextInput(label="Kind", placeholder="Lecture / Seminar / ...")
-    description_of_lecture = TextInput(label="Description", placeholder="Enter Description Here")
+    description_of_lecture = TextInput(
+        label="Description", placeholder="Enter Description Here"
+    )
 
 
 channel_request_input = ChannelRequestInput()
 
 channels_request_button = Button(label="Request", style=ButtonStyle.danger)
 
-channel_view = lambda: (
-    View(timeout=None)
-    .add_item(channels_request_button)
-)
+channel_view = lambda: (View(timeout=None).add_item(channels_request_button))
 
 channel_embed = Embed(
     type="richt",
     title="Request a text channel",
     colour=Colour.blue(),
     timestamp=datetime.now(),
-    description=channels_embed_description
+    description=channels_embed_description,
 )
 
 channel_embed.set_footer(text="Powered by Laurel")
