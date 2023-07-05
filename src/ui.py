@@ -146,7 +146,7 @@ channel_embed.set_footer(text="Powered by Laurel")
 
 ## #accept channels #############################################################################
 
-accept_channel_request_send="Created channel successfully"
+accept_channel_request_send="Requested successfully"
 
 class ChannelRequestAcceptInput(Modal, title="Request a Text Channel"):
     name_of_lecture = TextInput(label="Name of Lecture")
@@ -156,10 +156,7 @@ class ChannelRequestAcceptInput(Modal, title="Request a Text Channel"):
 
 def create_channel_request_accept_embed(input: ChannelRequestInput, interaction: Interaction, on_accept: Callable[[ChannelRequestAcceptInput, Interaction], None]) -> tuple[View, Embed]:
 
-
-    accept_channel_request_view = View(timeout=None).add_item(Button(label="Accept", style=ButtonStyle.green))
-
-    async def channel_request_accept_modal(interaction: Interaction):
+    async def channel_request_accept_modal(modal_interaction: Interaction):
         channel_request_accept_input = ChannelRequestAcceptInput()
 
         channel_request_accept_input.name_of_channel.default=input.name_of_channel.value
@@ -167,9 +164,13 @@ def create_channel_request_accept_embed(input: ChannelRequestInput, interaction:
         channel_request_accept_input.name_of_lecture.default=input.name_of_lecture.value
 
         channel_request_accept_input.on_submit = MethodType(on_accept, channel_request_accept_input)
-        await interaction.response.send_modal(channel_request_accept_input)
+        await modal_interaction.response.send_modal(channel_request_accept_input)
 
-    auth_token_button.callback = channel_request_accept_modal
+    accept_channel_request_button = Button(label="Accept", style=ButtonStyle.green)
+
+    accept_channel_request_button.callback = channel_request_accept_modal
+
+    accept_channel_request_view = View(timeout=None).add_item(accept_channel_request_button)
 
     accept_channel_request_embed = Embed(
         type="rich",
