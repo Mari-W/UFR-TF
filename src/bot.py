@@ -323,7 +323,7 @@ async def forward_request(input: ChannelRequestInput, request_interaction: Inter
         )
 
         await send_response_message(accept_interaction.response, accept_channel_send)
-        accept_interaction.message.edit(view=None)
+        accept_interaction.message.edit(embed=accept_interaction.message.embeds[0])
 
     view, embed = create_channel_request_accept_embed(input, request_interaction, on_accept)
 
