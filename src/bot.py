@@ -34,7 +34,6 @@ from .ui import (
     AccountNameInput,
     account_logout_button,
     account_update_success,
-    account_token_input,
     account_update_button,
     account_name_invalid,
     account_name_update_success,
