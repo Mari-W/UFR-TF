@@ -61,6 +61,7 @@ auth_embed.set_footer(text="Powered by Laurel")
 account_update_success = "Sync successful."
 account_name_invalid = "Your name does not follow the nameing guidelines. Please contact a server administrator."
 account_name_update_success = "Name update successful."
+account_embed_description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
 
 account_logout_button = Button(label="Logout", style=ButtonStyle.danger)
 
@@ -94,7 +95,7 @@ account_embed = Embed(
     title="Manage Your Connected Account",
     colour=Colour.blue(),
     timestamp=datetime.now(),
-    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam.",
+    description=account_embed_description
 )
 
 account_embed.add_field(
@@ -116,6 +117,7 @@ account_embed.set_footer(text="Powered by Laurel")
 
 ## #channels #############################################################################
 
+channels_embed_description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
 
 class ChannelRequestInput(Modal, title="Request a Text Channel"):
     name_of_lecture = TextInput(label="Name", placeholder="Enter Name of Lecture Here")
@@ -125,19 +127,19 @@ class ChannelRequestInput(Modal, title="Request a Text Channel"):
 
 channel_request_input = ChannelRequestInput()
 
+channels_request_button = Button(label="Request", style=ButtonStyle.danger)
+
 channel_view = lambda: (
     View(timeout=None)
-    .add_item(channels_request)
+    .add_item(channels_request_button)
 )
-
-channels_request_button = Button(label="Request", style=ButtonStyle.danger)
 
 channel_embed = Embed(
     type="richt",
     title="Request a text channel",
     colour=Colour.blue(),
     timestamp=datetime.now(),
-    description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
+    description=channels_embed_description
 )
 
 channel_embed.set_footer(text="Powered by Laurel")
