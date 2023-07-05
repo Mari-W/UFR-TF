@@ -160,7 +160,7 @@ class ChannelRequestDeclineInput(Modal, title="Declined Text Channel"):
     declined_massage = TextInput(label="Declined because")
 
 
-def create_channel_request_accept_embed(input: ChannelRequestInput, interaction: Interaction, on_accept: Callable[[ChannelRequestAcceptInput, Interaction], None], on_decline: Callable[[ChannelRequestAcceptInput, Interaction], None]) -> tuple[View, Embed]:
+def create_channel_request_accept_embed(input: ChannelRequestInput, interaction: Interaction, on_accept: Callable[[ChannelRequestAcceptInput, Interaction], None], on_decline: Callable[[ChannelRequestDeclineInput, Interaction], None]) -> tuple[View, Embed]:
 
     async def channel_request_accept_modal(modal_interaction: Interaction):
         channel_request_accept_input = ChannelRequestAcceptInput()
@@ -176,7 +176,7 @@ def create_channel_request_accept_embed(input: ChannelRequestInput, interaction:
     async def channel_request_decline_modal(modal_interaction: Interaction):
         channel_request_decline_input = ChannelRequestDeclineInput()
 
-        channel_request_decline_input.declined_massage.default=f"Der Kanal zu {input.name_of_lecture.value} existiert bereits. Um den Kanal anzeigen zu lassen gehe zu 'Knäle durchstöbern' -> 'channels' -> 'Anzeigen'.\nThe channel for {input.name_of_lecture.value} already exists. To see this channel do: 'Browse Channels' -> 'channels' -> 'show'"
+        channel_request_decline_input.declined_massage.default="" #f"Der Kanal zu {input.name_of_lecture.value} existiert bereits. Um den Kanal anzeigen zu lassen gehe zu 'Knäle durchstöbern' -> 'channels' -> 'Anzeigen'.\nThe channel for {input.name_of_lecture.value} already exists. To see this channel do: 'Browse Channels' -> 'channels' -> 'show'"
 
         channel_request_decline_input.on_submit = MethodType(on_decline, channel_request_decline_input)
 
