@@ -275,7 +275,7 @@ async def update_name(name: str, interaction: Interaction):
     except Forbidden:
         # user is server owner
         pass
-    await send_response_message(account_name_update_success)
+    await send_response_message(interaction.response, account_name_update_success)
 
 
 ## Utils ################################################################################
