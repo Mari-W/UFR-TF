@@ -155,10 +155,14 @@ class Bot(Client):
             channel = await member.guild.create_voice_channel(
                 name=f"{member.display_name}",
                 overwrites={
-                    utils.get(member.guild.roles, name="@everyone") : PermissionOverwrite(
+                    utils.get(
+                        member.guild.roles, name="@everyone"
+                    ): PermissionOverwrite(
                         view_channel=False,
                     ),
-                    utils.get(member.guild.roles, name="Authenticated"): PermissionOverwrite(
+                    utils.get(
+                        member.guild.roles, name="Authenticated"
+                    ): PermissionOverwrite(
                         add_reactions=True,
                         attach_files=True,
                         connect=True,
@@ -180,11 +184,9 @@ class Bot(Client):
                         use_external_sounds=True,
                         use_external_stickers=True,
                         use_soundboard=True,
-                        use_voice_activation=True
+                        use_voice_activation=True,
                     ),
-                    member: PermissionOverwrite(
-                        manage_channels=True
-                    ),
+                    member: PermissionOverwrite(manage_channels=True),
                 },
                 category=category,
                 position=1,
@@ -267,6 +269,7 @@ async def logout(interaction: Interaction, message=True) -> bool:
 
 async def update_name(name: str, interaction: Interaction):
     matches = re.findall(r"^\[[a-z0-9]+\]", interaction.user.nick)
+    print(interaction.user.nick)
     if len(matches) != 1:
         await send_response_message(interaction.response, account_name_invalid)
         return
