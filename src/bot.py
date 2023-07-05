@@ -121,12 +121,15 @@ class Bot(Client):
 
         # renames the user on the server
         async def on_rename(input: AccountNameInput, interaction: Interaction):
-            await update_name(str(input.name), interaction)
+            await update_name(input.name.value, interaction)
 
         account_name_input.on_submit = MethodType(on_rename, account_name_input)
 
         # opens name modal for new name
         async def account_name_modal(interaction: Interaction):
+            if account_name_modal is None:
+                await send_response_message(interaction.response, "fuck you")
+                return
             await interaction.response.send_modal(account_name_input)
 
         account_name_button.callback = account_name_modal

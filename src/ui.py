@@ -59,7 +59,7 @@ auth_embed.set_footer(text="Powered by Laurel")
 ## #account #############################################################################
 
 account_update_success = "Sync successful."
-account_name_invalid = "Your name does not follow the nameing guidelines. Please contact a server administrator."
+account_name_invalid = "Your name does not follow the naming guidelines. Please contact a server administrator."
 account_name_update_success = "Name update successful."
 account_embed_description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
 account_embed_disconnect = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
@@ -79,8 +79,8 @@ account_update_button = Button(label="Sync Account", style=ButtonStyle.primary)
 account_token_button = Button(label="Get Token", url=env.url + "auth/token")
 
 
-class AccountNameInput(Modal, title="Enter Name"):
-    name = TextInput(label="Name", placeholder="Enter Name Here")
+class AccountNameInput(Modal, title="Change Nickname"):
+    name = TextInput(label="New Nickname")
 
 account_name_input = AccountNameInput()
 account_name_button = Button(label="Set Name", style=ButtonStyle.secondary)
