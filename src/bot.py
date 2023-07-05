@@ -48,7 +48,9 @@ from .ui import (
     ChannelRequestAcceptInput,
     create_channel_request_accept_embed,
     accept_channel_request_send,
-    accept_channel_send
+    accept_channel_send,
+    ChannelRequestDeclineInput,
+    decline_channel_send
 )
 from .env import env
 
@@ -288,7 +290,6 @@ async def update_name(name: str, interaction: Interaction):
 
 
 async def forward_request(input: ChannelRequestInput, request_interaction: Interaction):
-
     async def on_accept(channel_request_accept_input: ChannelRequestAcceptInput, accept_interaction: Interaction):
         await accept_interaction.user.guild.create_text_channel(
             name=channel_request_accept_input.name_of_channel.value,
@@ -319,14 +320,24 @@ async def forward_request(input: ChannelRequestInput, request_interaction: Inter
                     use_external_stickers=True
                 )
             },
-            category=utils.get(accept_interaction.user.guild.categories, name="channels")
+            category=utils.get(accept_interaction.user.guild.categories, name="channels"),
+            topic=f"**[{channel_request_accept_input.kind_of_lecture}]**{channel_request_accept_input.name_of_lecture}"
         )
+
+        await request_interaction.user.send(f"Your channel request for {channel_request_accept_input.name_of_channel} is accepted")
 
         await accept_interaction.message.edit(view=None)
         await send_response_message(accept_interaction.response, accept_channel_send)
         
+    async def on_decline(channel_request_decline_input: ChannelRequestDeclineInput, decline_interaction: Interaction):
 
-    view, embed = create_channel_request_accept_embed(input, request_interaction, on_accept)
+        decline_message = channel_request_decline_input.declined_massage.value
+        await request_interaction.user.send(decline_message)
+
+        await decline_interaction.message.edit(view=None)
+        await send_response_message(decline_interaction.response, decline_channel_send)
+
+    view, embed = create_channel_request_accept_embed(input, request_interaction, on_accept, on_decline)
 
     channel = utils.get(request_interaction.user.guild.channels, name="accept")
     await channel.send(embed=embed, view=view)

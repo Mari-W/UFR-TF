@@ -147,16 +147,20 @@ channel_embed.set_footer(text="Powered by Laurel")
 ## #accept channels #############################################################################
 
 accept_channel_send="Accepted channel Request Successfully"
+decline_channel_send="Declined channel Request Successfully"
 
 accept_channel_request_send="Requested successfully"
 
 class ChannelRequestAcceptInput(Modal, title="Request a Text Channel"):
     name_of_lecture = TextInput(label="Name of Lecture")
     kind_of_lecture = TextInput(label="Kind of Lecture")
-    name_of_channel = TextInput(label="Suggested Name of Channel")
+    name_of_channel = TextInput(label="Name of Channel")
+
+class ChannelRequestDeclineInput(Modal, title="Decline a requested text channel"):
+    declined_massage = TextInput(lable="Declined because:")
 
 
-def create_channel_request_accept_embed(input: ChannelRequestInput, interaction: Interaction, on_accept: Callable[[ChannelRequestAcceptInput, Interaction], None]) -> tuple[View, Embed]:
+def create_channel_request_accept_embed(input: ChannelRequestInput, interaction: Interaction, on_accept: Callable[[ChannelRequestAcceptInput, Interaction], None], on_decline: Callable[[ChannelRequestAcceptInput, Interaction], None]) -> tuple[View, Embed]:
 
     async def channel_request_accept_modal(modal_interaction: Interaction):
         channel_request_accept_input = ChannelRequestAcceptInput()
@@ -166,20 +170,33 @@ def create_channel_request_accept_embed(input: ChannelRequestInput, interaction:
         channel_request_accept_input.name_of_lecture.default=input.name_of_lecture.value
 
         channel_request_accept_input.on_submit = MethodType(on_accept, channel_request_accept_input)
+
         await modal_interaction.response.send_modal(channel_request_accept_input)
+    
+    async def channel_request_decline_modal(modal_interaction: Interaction):
+        channel_request_decline_input = ChannelRequestDeclineInput()
+
+        channel_request_decline_input.declined_massage.default=f"Der Kanal zu {input.name_of_lecture} existiert bereits. Um den Kanal anzeigen zu lassen gehe zu 'Knäle durchstöbern' -> 'channels' -> 'Anzeigen'.\nThe channel for {input.name_of_lecture} already exists. To see this channel do: 'Browse Channels' -> 'channels' -> 'show'"
+
+        channel_request_decline_input.on_submit = MethodType(on_decline, channel_request_decline_input)
+
+        await modal_interaction.response.send_modal(channel_request_decline_input)
+
 
     accept_channel_request_button = Button(label="Accept", style=ButtonStyle.green)
+    decline_channel_request_button = Button(labdel="Decline", style=ButtonStyle.danger)
 
     accept_channel_request_button.callback = channel_request_accept_modal
+    decline_channel_request_button.callback = channel_request_decline_modal
 
-    accept_channel_request_view = View(timeout=None).add_item(accept_channel_request_button)
+    accept_channel_request_view = View(timeout=None).add_item(accept_channel_request_button).add_item(decline_channel_request_button)
 
     accept_channel_request_embed = Embed(
         type="rich",
         title="Request a text channel",
         colour=Colour.blue(),
         timestamp=datetime.now(),
-        description=f"Requesting a Channel:\n\tName of the Lecture:\t{input.kind_of_lecture.value}\n\tKind of Lecture:\t{input.name_of_channel.value}\n\tName of Channel:\t{input.name_of_lecture.value}"
+        description=f"Requesting a Channel:\n\tName of the Lecture:\t{input.name_of_lecture.value}\n\tKind of Lecture:\t{input.kind_of_lecture.value}\n\tName of Channel:\t{input.name_of_channel.value}"
     )
 
     accept_channel_request_embed.set_author(name=interaction.user.nick, icon_url=interaction.user.avatar.url)
