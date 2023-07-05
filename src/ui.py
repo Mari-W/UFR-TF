@@ -176,7 +176,7 @@ def create_channel_request_accept_embed(input: ChannelRequestInput, interaction:
     async def channel_request_decline_modal(modal_interaction: Interaction):
         channel_request_decline_input = ChannelRequestDeclineInput()
 
-        channel_request_decline_input.declined_massage.default="" #f"Der Kanal zu {input.name_of_lecture.value} existiert bereits. Um den Kanal anzeigen zu lassen gehe zu 'Knäle durchstöbern' -> 'channels' -> 'Anzeigen'.\nThe channel for {input.name_of_lecture.value} already exists. To see this channel do: 'Browse Channels' -> 'channels' -> 'show'"
+        channel_request_decline_input.declined_massage.default=f"Der Kanal zu {input.name_of_lecture.value} existiert bereits. Um den Kanal anzeigen zu lassen gehe zu 'Kanäle durchstöbern' -> 'channels' -> 'Anzeigen'." #\nThe channel for {input.name_of_lecture.value} already exists. To see this channel do: 'Browse Channels' -> 'channels' -> 'show'"
 
         channel_request_decline_input.on_submit = MethodType(on_decline, channel_request_decline_input)
 
