@@ -35,8 +35,6 @@ auth_embed_enter_token = "Lorem ipsum dolor sit amet, consectetur adipiscing eli
 class AuthTokenInput(Modal, title="Enter Authentication Token"):
     token = TextInput(label="Token", placeholder="Authentication Token")
 
-auth_token_input = AuthTokenInput()
-
 auth_token_button = Button(label="Authenticate", style=ButtonStyle.primary)
 auth_link_button = Button(label="Get Token", url=env.url + "auth/token")
 auth_view = (
@@ -73,11 +71,8 @@ class AccountTokenInput(Modal, title="Enter Authorization Token"):
     token = TextInput(label="Token", placeholder="Paste Authorization Token Here")
 
 
-account_token_input = AccountTokenInput()
-
 account_update_button = Button(label="Sync Account", style=ButtonStyle.primary)
 account_token_button = Button(label="Get Token", url=env.url + "auth/token")
-
 
 class AccountNameInput(Modal, title="Change Nickname"):
     name = TextInput(label="New Nickname")

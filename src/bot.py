@@ -24,7 +24,6 @@ from .data import degrees
 from .ui import (
     about_embed,
     AuthTokenInput,
-    auth_token_input,
     auth_token_button,
     auth_view,
     auth_embed,
@@ -86,10 +85,10 @@ class Bot(Client):
         async def on_login(input: AuthTokenInput, interaction: Interaction):
             await login(str(input.token), interaction)
 
-        auth_token_input.on_submit = MethodType(on_login, auth_token_input)
-
         # opens the token modal
         async def auth_token_modal(interaction: Interaction):
+            auth_token_input = AuthTokenInput()
+            auth_token_input.on_submit = MethodType(on_login, auth_token_input)
             await interaction.response.send_modal(auth_token_input)
 
         auth_token_button.callback = auth_token_modal
@@ -110,10 +109,10 @@ class Bot(Client):
                     interaction.response, account_update_success
                 )
 
-        account_token_input.on_submit = MethodType(on_update, account_token_input)
-
         # opens token modal for sync
         async def account_token_modal(interaction: Interaction):
+            account_token_input = AccountTokenInput()
+            account_token_input.on_submit = MethodType(on_update, account_token_input)
             await interaction.response.send_modal(account_token_input)
 
         account_update_button.callback = account_token_modal
