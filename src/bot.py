@@ -322,7 +322,7 @@ async def forward_request(input: ChannelRequestInput, request_interaction: Inter
                 )
             },
             category=utils.get(accept_interaction.user.guild.categories, name="channels"),
-            topic=f"**[{channel_request_accept_input.kind_of_lecture}]**{channel_request_accept_input.name_of_lecture}"
+            topic=f"**[{channel_request_accept_input.kind_of_lecture}]** {channel_request_accept_input.name_of_lecture}"
         )
 
         await request_interaction.user.send(f"Your channel request for {channel_request_accept_input.name_of_channel} is accepted")
