@@ -49,6 +49,7 @@ from .ui import (
     channel_view,
     channel_embed,
 )
+from .env import env
 
 # thread shared state between fastapi and discord bot
 state = Manager().dict()
@@ -194,7 +195,7 @@ class Bot(Client):
             before.channel != after.channel
             and before.channel.category == category
             and not before.channel.members
-            and before.channel.name != "create"
+            and before.channel.id != int(env.create_voice_channel_id)
         ):
             # delete empty channels except #create
             await before.channel.delete()

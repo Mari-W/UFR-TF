@@ -9,6 +9,7 @@ class Env(BaseSettings):
     laurel_client_secret: str  # oauth client secret
     laurel_logout_url: str  # logout url with ?redirect= parameter
     discord_bot_token: str  # discord bot secret token
+    create_voice_channel_id: str  # the id of the create voice channel channel
 
     class Config:
         env_file = ".env"
