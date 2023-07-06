@@ -16,7 +16,7 @@ about_embed_rules = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In
 about_embed = Embed(
     type="rich",
     title="About this Discord Server",
-    colour=Colour.blue(),
+    colour=Colour.blurple(),
     timestamp=datetime.now(),
     description=about_embed_description,
 )
@@ -49,7 +49,7 @@ auth_embed = Embed(
     type="rich",
     title="Login using University Account",
     url=env.url + "auth/token",
-    colour=Colour.blue(),
+    colour=Colour.blurple(),
     timestamp=datetime.now(),
     description=auth_embed_description,
 )
@@ -96,7 +96,7 @@ account_view = lambda: (
 account_embed = Embed(
     type="rich",
     title="Manage Your Connected Account",
-    colour=Colour.blue(),
+    colour=Colour.blurple(),
     timestamp=datetime.now(),
     description=account_embed_description,
 )
@@ -143,7 +143,7 @@ channel_view = lambda: (View(timeout=None).add_item(channels_request_button).add
 channel_embed = Embed(
     type="rich",
     title="Request a text channel",
-    colour=Colour.blue(),
+    colour=Colour.blurple(),
     timestamp=datetime.now(),
     description=channels_embed_description,
 )
@@ -202,7 +202,7 @@ def create_channel_request_accept_embed(input: ChannelRequestInput, interaction:
     accept_channel_request_embed = Embed(
         type="rich",
         title="Request a text channel", 
-        colour=Colour.blue(),
+        colour=Colour.blurple(),
         timestamp=datetime.now(),
         description=f"Requesting a Channel:\n\tName of the Lecture:\t{input.name_of_lecture.value}\n\tKind of Lecture:\t{input.kind_of_lecture.value}\n\tName of Channel:\t{input.name_of_channel.value}"
     )
@@ -262,7 +262,7 @@ def create_off_topic_channel_request_accept_embed(input: OffTopicChannelRequestI
     accept_off_topic_channel_request_embed = Embed(
         type="rich",
         title="Request an off-topic channel", 
-        colour=Colour.blue(),
+        colour=Colour.blurple(),
         timestamp=datetime.now(),
         description=f"Requesting an off-topic Channel:\n\tName of the Channel:\t{input.name_of_channel.value}\n\tDescription:\t{input.description.value}"
     )
