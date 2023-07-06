@@ -327,7 +327,7 @@ async def forward_request(input: ChannelRequestInput, request_interaction: Inter
 
         await request_interaction.user.send(f"Your channel request for {channel_request_accept_input.name_of_channel} is accepted")
         embed = accept_interaction.message.embeds[0]
-        embed = embed.set_footer(text="Accepted")
+        embed = embed.set_footer(text=f"Accepted by {accept_interaction.user.nick}")
         await accept_interaction.message.edit(embed=embed, view=None)
         await send_response_message(accept_interaction.response, accept_channel_send)
         
@@ -337,7 +337,7 @@ async def forward_request(input: ChannelRequestInput, request_interaction: Inter
         await request_interaction.user.send(decline_message)
 
         embed = decline_interaction.message.embeds[0]
-        embed = embed.set_footer(text="Declined")
+        embed = embed.set_footer(text=f"Declined by {decline_interaction.user.nick}")
         await decline_interaction.message.edit(embed=embed, view=None)
         await send_response_message(decline_interaction.response, decline_channel_send)
 
