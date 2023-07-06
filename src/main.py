@@ -36,24 +36,24 @@ async def startup():
 # Routes
 
 
-@app.get("/auth/login")
+@app.get("/discord/auth/login")
 async def auth_login(request: Request):
     return await login(request)
 
 
-@app.get("/auth/logout")
+@app.get("/discord/auth/logout")
 async def auth_logout(request: Request):
     return await logout(request)
 
 
-@app.get("/token")
+@app.get("/discord/token")
 # maximum of 1 token every six second
 @limiter.limit("10/minute")
 async def auth_token(request: Request):
     return await token(request)
 
 
-@app.get("/auth/callback")
+@app.get("/discord/auth/callback")
 async def auth_callback(request: Request):
     return await callback(request)
 
