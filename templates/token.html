@@ -22,7 +22,7 @@
       </div>
     </div>
   </section> -->
-  <div class="card">
+  <div class="card" style="height: 100vh;">
     <header class="card-header">
       <p class="card-header-title">
         Discord Authorization Token
@@ -41,10 +41,13 @@
         </div>
         <time id="time">...</time>
         <script>
-          document.getElementById("time").innerHTML = "token generated at " + Date().toLocaleLowerCase().split("gmt")[0]
+          let date = new Date()
+          date.setMinutes(date.getMinutes() + 5)
+          document.getElementById("time").innerHTML = "token will expire at " + date.toLocaleTimeString()
         </script>
       </div>
       <footer class="card-footer">
+        <a href="" class="card-footer-item">Refresh</a>
         <a href="{{account_url}}" class="card-footer-item">Account</a>
         <a href="{{logout_url}}" class="card-footer-item">Logout</a>
       </footer>
