@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
 RUN apt-get update -y && \
-  apt-get install -y build-essential checkinstall \ 
+  DEBIAN_FRONTEND="noninteractive" apt-get install -y build-essential checkinstall \ 
   libreadline-gplv2-dev  libncursesw5-dev libssl-dev \
   libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev 
 
