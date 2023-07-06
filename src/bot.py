@@ -166,7 +166,7 @@ class Bot(Client):
             )
             await interaction.response.send_modal(offtopic_channel_request_input)
 
-        # sends the rquest to admin channel
+        # sends the request to admin channel
         async def on_request(
             input: ChannelRequestInput | OffTopicChannelRequestInput,
             interaction: Interaction,
@@ -360,7 +360,7 @@ async def forward_channel_request(
             category=utils.get(
                 accept_interaction.user.guild.categories, name="channels"
             ),
-            topic=f"**[{channel_request_accept_input.kind_of_lecture}]** {channel_request_accept_input.name_of_lecture}",
+            topic=f"**[{channel_request_accept_input.kind_of_event}]** {channel_request_accept_input.name_of_lecture}",
         )
 
         await request_interaction.user.send(

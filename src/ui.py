@@ -39,15 +39,15 @@ class AuthTokenInput(Modal, title="Enter Authentication Token"):
     token = TextInput(label="Token", placeholder="Authentication Token")
 
 
-auth_token_button = Button(label="Authenticate", style=ButtonStyle.primary)
-auth_link_button = Button(label="Get Token", url=env.url + "auth/token")
+auth_token_button = Button(label="Enter Auth Token", style=ButtonStyle.primary)
+auth_link_button = Button(label="Get Auth Token", url=env.url + "token")
 auth_view = (
     lambda: View(timeout=None).add_item(auth_link_button).add_item(auth_token_button)
 )
 
 auth_embed = Embed(
     type="rich",
-    title="Login using University Account",
+    title="Authenticate using University Account",
     url=env.url + "token",
     colour=Colour.blurple(),
     timestamp=datetime.now(),
@@ -68,22 +68,19 @@ account_embed_disconnect = "Lorem ipsum dolor sit amet, consectetur adipiscing e
 account_embed_sync = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
 account_embed_name = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
 
-account_logout_button = Button(label="Logout", style=ButtonStyle.danger)
 
-
-class AccountTokenInput(Modal, title="Enter Authorization Token"):
-    token = TextInput(label="Token", placeholder="Paste Authorization Token Here")
-
-
-account_update_button = Button(label="Sync Account", style=ButtonStyle.primary)
-account_token_button = Button(label="Get Token", url=env.url + "token")
+class AccountTokenInput(Modal, title="Enter Authentication Token"):
+    token = TextInput(label="Token", placeholder="Paste Authentication Token Here")
 
 
 class AccountNameInput(Modal, title="Change Nickname"):
     name = TextInput(label="New Nickname")
 
 
-account_name_button = Button(label="Set Name", style=ButtonStyle.secondary)
+account_logout_button = Button(label="Disconnect", style=ButtonStyle.danger)
+account_name_button = Button(label="Update Nickname", style=ButtonStyle.secondary)
+account_token_button = Button(label="Get Sync Token", url=env.url + "token")
+account_update_button = Button(label="Enter Sync Token", style=ButtonStyle.primary)
 
 account_view = lambda: (
     View(timeout=None)
@@ -130,12 +127,12 @@ channels_embed_description = "Lorem ipsum dolor sit amet, consectetur adipiscing
 
 
 class ChannelRequestInput(Modal, title="Text Channel Request"):
-    name_of_lecture = TextInput(label="Name of Lecture", placeholder="eg. SAT-Solving")
-    kind_of_lecture = TextInput(
+    name_of_lecture = TextInput(label="Name of Lecture", placeholder="eg. SAT solving")
+    kind_of_event = TextInput(
         label="Kind of Event", placeholder="Lecture / Seminar / BOK / Lab / ..."
     )
     name_of_channel = TextInput(
-        label="Suggested Name of Channel", placeholder="eg. SAT-Solving", required=False
+        label="Suggested Name of Channel", placeholder="eg. sat-solving", required=False
     )
 
 
@@ -143,12 +140,14 @@ class OffTopicChannelRequestInput(Modal, title="Offtopic Channel Request"):
     name_of_channel = TextInput(label="Name of Channel", placeholder="Volleyball")
     description = TextInput(
         label="Description",
-        placeholder="A Channel to find people for playing volleyball",
+        placeholder="A place to find people for playing volleyball",
     )
 
 
-channels_request_button = Button(label="Request", style=ButtonStyle.danger)
-offtopic_request_button = Button(label="Offtopic", style=ButtonStyle.blurple)
+channels_request_button = Button(label="Request Channel", style=ButtonStyle.danger)
+offtopic_request_button = Button(
+    label="Request Offtopic Channel", style=ButtonStyle.blurple
+)
 
 channel_view = lambda: (
     View(timeout=None)
@@ -168,15 +167,15 @@ channel_embed.set_footer(text="Powered by Laurel")
 
 ## #accept channels #############################################################################
 
-accept_channel_send = "Accepted channel request successfully"
-decline_channel_send = "Declined channel request successfully"
+accept_channel_send = "Accepted channel request"
+decline_channel_send = "Declined channel request"
 
-accept_channel_request_send = "Request submitted successfully"
+accept_channel_request_send = "Request submitted"
 
 
 class ChannelRequestAcceptInput(Modal, title="Accept Text Channel Request"):
     name_of_lecture = TextInput(label="Name of Lecture")
-    kind_of_lecture = TextInput(label="Kind of Lecture")
+    kind_of_event = TextInput(label="Kind of Event")
     name_of_channel = TextInput(label="Name of Channel")
 
 
@@ -196,9 +195,7 @@ def create_channel_request_accept_embed(
         channel_request_accept_input.name_of_channel.default = (
             input.name_of_channel.value
         )
-        channel_request_accept_input.kind_of_lecture.default = (
-            input.kind_of_lecture.value
-        )
+        channel_request_accept_input.kind_of_event.default = input.kind_of_event.value
         channel_request_accept_input.name_of_lecture.default = (
             input.name_of_lecture.value
         )
@@ -243,9 +240,7 @@ def create_channel_request_accept_embed(
     accept_channel_request_embed.add_field(
         "Name of Lecture", input.name_of_lecture.value
     )
-    accept_channel_request_embed.add_field(
-        "Kind of Lecture", input.kind_of_lecture.value
-    )
+    accept_channel_request_embed.add_field("Kind of Lecture", input.kind_of_event.value)
     accept_channel_request_embed.add_field(
         "Name of Channel", input.name_of_channel.value
     )
@@ -258,10 +253,9 @@ def create_channel_request_accept_embed(
 
 # offtopic channel request #############################################################################
 
-accept_offtopic_channel_send = "Accepted offtopic channel request successfully"
-decline_offtopic_channel_send = "Declined offtopic channel request Successfully"
-
-accept_channel_request_send = "Request sent successfully"
+accept_offtopic_channel_send = "Accepted offtopic channel request"
+decline_offtopic_channel_send = "Declined offtopic channel request"
+accept_channel_request_send = "Request sent"
 
 
 class OffTopicChannelRequestAcceptInput(Modal, title="Accept Offtopic Channel Request"):
@@ -269,7 +263,9 @@ class OffTopicChannelRequestAcceptInput(Modal, title="Accept Offtopic Channel Re
     description = TextInput(label="Description")
 
 
-class OffTopicChannelRequestDeclineInput(Modal, title="Decline Offtopic Channel Request"):
+class OffTopicChannelRequestDeclineInput(
+    Modal, title="Decline Offtopic Channel Request"
+):
     declined_massage = TextInput(label="Reason")
 
 
