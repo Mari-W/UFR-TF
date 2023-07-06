@@ -130,9 +130,15 @@ class ChannelRequestInput(Modal, title="Request a Text Channel"):
     kind_of_lecture = TextInput(label="Kind of Lecture", placeholder="Lecture / Seminar / BOK / Lab / ...")
     name_of_channel = TextInput(label="Suggested Name of Channel", placeholder="eg. SAT-Solving", required=False)
 
-channels_request_button = Button(label="Request", style=ButtonStyle.danger)
+class OffTopicChannelRequestInput(Modal, title="Request an off-topic Channel"):
+    name_of_channel = TextInput(label="Name of Channel", placeholder="Volleyball")
+    description = TextInput(label="Description", placeholder="A Channel to find people for playing volleyball")
 
-channel_view = lambda: (View(timeout=None).add_item(channels_request_button))
+
+channels_request_button = Button(label="Request", style=ButtonStyle.danger)
+off_topic_request_button = Button(label="Off-Topic", style=ButtonStyle.blurple)
+
+channel_view = lambda: (View(timeout=None).add_item(channels_request_button).add_item(off_topic_request_button))
 
 channel_embed = Embed(
     type="rich",
@@ -204,3 +210,63 @@ def create_channel_request_accept_embed(input: ChannelRequestInput, interaction:
     accept_channel_request_embed.set_author(name=interaction.user.nick, icon_url=interaction.user.avatar.url)
 
     return accept_channel_request_view, accept_channel_request_embed
+
+# off-topic channel request #############################################################################
+
+accept_off_topic_channel_send="Accepted off-topic channel Request Successfully"
+decline_off_topic_channel_send="Declined off-topic channel Request Successfully"
+
+accept_channel_request_send="Requested successfully"
+
+
+class OffTopicChannelRequestAcceptInput(Modal, title="Accept an off-topic Channel"):
+    name_of_channel = TextInput(label="Name of Channel")
+    description = TextInput(label="Description")
+
+class OffTopicChannelRequestDeclineInput(Modal, title="Decline an off-topic Channel"):
+    declined_massage = TextInput(label="Declined because")
+
+
+def create_off_topic_channel_request_accept_embed(input: OffTopicChannelRequestInput, interaction: Interaction, on_accept: Callable[[ChannelRequestAcceptInput, Interaction], None], on_decline: Callable[[ChannelRequestDeclineInput, Interaction], None]) -> tuple[View, Embed]:
+
+    async def off_topic_channel_request_accept_modal(modal_interaction: Interaction):
+        off_topic_channel_request_accept_input = OffTopicChannelRequestAcceptInput()
+
+        off_topic_channel_request_accept_input.name_of_channel.default=input.name_of_channel.value
+        off_topic_channel_request_accept_input.description.default=input.description.value
+
+        off_topic_channel_request_accept_input.on_submit = MethodType(on_accept, off_topic_channel_request_accept_input)
+
+        await modal_interaction.response.send_modal(off_topic_channel_request_accept_input)
+    
+    async def off_topic_channel_request_decline_modal(modal_interaction: Interaction):
+        off_topic_channel_request_decline_input = OffTopicChannelRequestDeclineInput()
+
+        off_topic_channel_request_decline_input.declined_massage.default=f"Der Kanal zu {input.name_of_channel.value} existiert bereits. Um den Kanal anzeigen zu lassen gehe zu 'Kanäle durchstöbern' -> 'channels' -> 'Anzeigen'."
+
+        off_topic_channel_request_decline_input.on_submit = MethodType(on_decline, off_topic_channel_request_decline_input)
+
+        await modal_interaction.response.send_modal(off_topic_channel_request_decline_input)
+
+
+    accept_off_topic_channel_request_button = Button(label="Accept", style=ButtonStyle.green)
+    decline_off_topic_channel_request_button = Button(label="Decline", style=ButtonStyle.danger)
+
+    accept_off_topic_channel_request_button.callback = off_topic_channel_request_accept_modal
+    decline_off_topic_channel_request_button.callback = off_topic_channel_request_decline_modal
+
+    accept_off_topic_channel_request_view = (View(timeout=None)
+                                   .add_item(accept_off_topic_channel_request_button)
+                                   .add_item(decline_off_topic_channel_request_button))
+
+    accept_off_topic_channel_request_embed = Embed(
+        type="rich",
+        title="Request an off-topic channel", 
+        colour=Colour.blue(),
+        timestamp=datetime.now(),
+        description=f"Requesting an off-topic Channel:\n\tName of the Channel:\t{input.name_of_channel.value}\n\tDescription:\t{input.description.value}"
+    )
+
+    accept_off_topic_channel_request_embed.set_author(name=interaction.user.nick, icon_url=interaction.user.avatar.url)
+
+    return accept_off_topic_channel_request_view, accept_off_topic_channel_request_embed
