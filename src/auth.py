@@ -70,9 +70,7 @@ async def token(request: Request):
             "token": token,
             "sub": user["sub"],
             "name": user["name"],
-            "account_url": env.laurel_auth_url
-            + "?redirect="
-            + str(request.url_for("auth_login")),
+            "account_url": env.laurel_auth_url,
             "logout_url": env.laurel_auth_url
             + "auth/logout?redirect="
             + str(request.url_for("auth_login")),
