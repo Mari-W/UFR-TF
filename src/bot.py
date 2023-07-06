@@ -326,8 +326,9 @@ async def forward_request(input: ChannelRequestInput, request_interaction: Inter
         )
 
         await request_interaction.user.send(f"Your channel request for {channel_request_accept_input.name_of_channel} is accepted")
-
-        await accept_interaction.message.edit(view=None)
+        embed = accept_interaction.message.embeds[0]
+        embed = embed.set_footer(text="Accepted")
+        await accept_interaction.message.edit(embed=embed, view=None)
         await send_response_message(accept_interaction.response, accept_channel_send)
         
     async def on_decline(channel_request_decline_input: ChannelRequestDeclineInput, decline_interaction: Interaction):
@@ -335,7 +336,9 @@ async def forward_request(input: ChannelRequestInput, request_interaction: Inter
         decline_message = channel_request_decline_input.declined_massage.value
         await request_interaction.user.send(decline_message)
 
-        await decline_interaction.message.edit(view=None)
+        embed = decline_interaction.message.embeds[0]
+        embed = embed.set_footer(text="Declined")
+        await decline_interaction.message.edit(embed=embed, view=None)
         await send_response_message(decline_interaction.response, decline_channel_send)
 
     view, embed = create_channel_request_accept_embed(input, request_interaction, on_accept, on_decline)
