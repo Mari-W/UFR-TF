@@ -46,7 +46,7 @@ async def auth_logout(request: Request):
     return await logout(request)
 
 
-@app.get("/auth/token")
+@app.get("/token")
 # maximum of 1 token every six second
 @limiter.limit("10/minute")
 async def auth_token(request: Request):

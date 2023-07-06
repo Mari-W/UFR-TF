@@ -76,7 +76,7 @@ class AccountTokenInput(Modal, title="Enter Authorization Token"):
 
 
 account_update_button = Button(label="Sync Account", style=ButtonStyle.primary)
-account_token_button = Button(label="Get Token", url=env.url + "auth/token")
+account_token_button = Button(label="Get Token", url=env.url + "token")
 
 
 class AccountNameInput(Modal, title="Change Nickname"):

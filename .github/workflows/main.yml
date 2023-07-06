@@ -12,4 +12,4 @@ jobs:
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
         port: 22
-        script: cd server && ./pull
+        script: cd /teaching-server/laurel/discord-bot && docker-compose down && docker-compose pull && docker-compose up -d
