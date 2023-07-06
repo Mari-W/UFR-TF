@@ -52,12 +52,12 @@ from .ui import (
     ChannelRequestDeclineInput,
     decline_channel_send,
     OffTopicChannelRequestInput,
-    off_topic_request_button,
-    create_off_topic_channel_request_accept_embed,
+    offtopic_request_button,
+    create_offtopic_channel_request_accept_embed,
     OffTopicChannelRequestAcceptInput,
     OffTopicChannelRequestDeclineInput,
-    accept_off_topic_channel_send,
-    decline_off_topic_channel_send
+    accept_offtopic_channel_send,
+    decline_offtopic_channel_send
 )
 from .env import env
 
@@ -153,11 +153,11 @@ class Bot(Client):
             channel_request_input.on_submit = MethodType(on_request, channel_request_input)
             await interaction.response.send_modal(channel_request_input)
         
-        # opens the off-topic request modal
-        async def off_topic_channel_request_modal(interaction: Interaction):
-            off_topic_channel_request_input = OffTopicChannelRequestInput()
-            off_topic_channel_request_input.on_submit = MethodType(on_request, off_topic_channel_request_input)
-            await interaction.response.send_modal(off_topic_channel_request_input)
+        # opens the offtopic request modal
+        async def offtopic_channel_request_modal(interaction: Interaction):
+            offtopic_channel_request_input = OffTopicChannelRequestInput()
+            offtopic_channel_request_input.on_submit = MethodType(on_request, offtopic_channel_request_input)
+            await interaction.response.send_modal(offtopic_channel_request_input)
 
         # sends the rquest to admin channel
         async def on_request(input: ChannelRequestInput | OffTopicChannelRequestInput, interaction: Interaction):
@@ -165,10 +165,10 @@ class Bot(Client):
                 case ChannelRequestInput():
                     await forward_channel_request(input, interaction)
                 case OffTopicChannelRequestInput():
-                    await forward_off_topic_channel_request(input, interaction)
+                    await forward_offtopic_channel_request(input, interaction)
 
         channels_request_button.callback = channel_request_modal
-        off_topic_request_button.callback = off_topic_channel_request_modal
+        offtopic_request_button.callback = offtopic_channel_request_modal
 
         await message.edit(content="", embed=channel_embed, view=channel_view())
 
@@ -367,11 +367,11 @@ async def forward_channel_request(input: ChannelRequestInput, request_interactio
     await send_response_message(request_interaction.response, accept_channel_request_send)
 
 
-async def forward_off_topic_channel_request(input: OffTopicChannelRequestInput, request_interaction: Interaction):
+async def forward_offtopic_channel_request(input: OffTopicChannelRequestInput, request_interaction: Interaction):
     
-    async def on_accept(off_topic_channel_request_accept_input: OffTopicChannelRequestAcceptInput, accept_interaction: Interaction):
+    async def on_accept(offtopic_channel_request_accept_input: OffTopicChannelRequestAcceptInput, accept_interaction: Interaction):
         await accept_interaction.user.guild.create_text_channel(
-            name=off_topic_channel_request_accept_input.name_of_channel.value,
+            name=offtopic_channel_request_accept_input.name_of_channel.value,
             overwrites={
                 utils.get(
                     accept_interaction.user.guild.roles, name="@everyone"
@@ -399,15 +399,15 @@ async def forward_off_topic_channel_request(input: OffTopicChannelRequestInput, 
                     use_external_stickers=True
                 )
             },
-            category=utils.get(accept_interaction.user.guild.categories, name="off-topic"),
-            topic=off_topic_channel_request_accept_input.description.value
+            category=utils.get(accept_interaction.user.guild.categories, name="offtopic"),
+            topic=offtopic_channel_request_accept_input.description.value
         )
 
-        await request_interaction.user.send(f"Your channel request for {off_topic_channel_request_accept_input.name_of_channel} is accepted")
+        await request_interaction.user.send(f"Your channel request for {offtopic_channel_request_accept_input.name_of_channel} is accepted")
         embed = accept_interaction.message.embeds[0]
         embed = embed.set_footer(text=f"Accepted by {accept_interaction.user.nick}")
         await accept_interaction.message.edit(embed=embed, view=None)
-        await send_response_message(accept_interaction.response, accept_off_topic_channel_send)
+        await send_response_message(accept_interaction.response, accept_offtopic_channel_send)
         
     async def on_decline(channel_request_decline_input: OffTopicChannelRequestDeclineInput, decline_interaction: Interaction):
 
@@ -417,9 +417,9 @@ async def forward_off_topic_channel_request(input: OffTopicChannelRequestInput, 
         embed = decline_interaction.message.embeds[0]
         embed = embed.set_footer(text=f"Declined by {decline_interaction.user.nick}")
         await decline_interaction.message.edit(embed=embed, view=None)
-        await send_response_message(decline_interaction.response, decline_off_topic_channel_send)
+        await send_response_message(decline_interaction.response, decline_offtopic_channel_send)
 
-    view, embed = create_off_topic_channel_request_accept_embed(input, request_interaction, on_accept, on_decline)
+    view, embed = create_offtopic_channel_request_accept_embed(input, request_interaction, on_accept, on_decline)
 
     channel = utils.get(request_interaction.user.guild.channels, name="accept")
     await channel.send(embed=embed, view=view)
