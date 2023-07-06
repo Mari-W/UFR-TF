@@ -162,9 +162,9 @@ class Bot(Client):
         # sends the rquest to admin channel
         async def on_request(input: ChannelRequestInput | OffTopicChannelRequestInput, interaction: Interaction):
             match input:
-                case ChannelRequestInput(_):
+                case ChannelRequestInput():
                     await forward_channel_request(input, interaction)
-                case OffTopicChannelRequestInput(_):
+                case OffTopicChannelRequestInput():
                     await forward_off_topic_channel_request(input, interaction)
 
         channels_request_button.callback = channel_request_modal
