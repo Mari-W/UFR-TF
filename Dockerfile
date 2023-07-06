@@ -7,7 +7,7 @@ RUN apt-get update -y && \
 
 RUN add-apt-repository ppa:deadsnakes/ppa -y
 
-RUN apt install python3.11
+RUN apt-get install python3.11 -y
 
 WORKDIR /app
 
