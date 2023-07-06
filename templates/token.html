@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>UFR TF Discord Token Panel</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  </head>
-  <body>
-  <section class="section">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UFR TF Discord Token Panel</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+
+<body>
+  <!-- <section class="section">
     <div class="container">
       <h1 class="title">
         Authentication Token Panel
@@ -19,6 +21,35 @@
         {{token}}
       </div>
     </div>
-  </section>
-  </body>
+  </section> -->
+  <div class="card">
+    <header class="card-header">
+      <p class="card-header-title">
+        Discord Authorization Token
+      </p>
+    </header>
+    <div class="card-content">
+      <div class="media">
+        <div class="media-content">
+          <p class="title is-4">{{name}}</p>
+          <p class="subtitle is-6">{{sub}}</p>
+        </div>
+      </div>
+      <div class="content">
+        <div class="notification is-success">
+          {{token}}
+        </div>
+        <time id="time">...</time>
+        <script>
+          document.getElementById("time").innerHTML = "token generated at " + Date().toLocaleLowerCase().split("gmt")[0]
+        </script>
+      </div>
+      <footer class="card-footer">
+        <a href="{{account_url}}" class="card-footer-item">Account</a>
+        <a href="{{logout_url}}" class="card-footer-item">Logout</a>
+      </footer>
+    </div>
+  </div>
+</body>
+
 </html>

@@ -41,7 +41,9 @@ async def logout(request: Request):
     request.session.clear()
     # logging out by logging out of all laurel services and redirect to login here
     return RedirectResponse(
-        env.laurel_logout_url + "?redirect=" + str(request.url_for("auth_login")),
+        env.laurel_auth_url
+        + "auth/logout?redirect="
+        + str(request.url_for("auth_login")),
     )
 
 
@@ -62,5 +64,17 @@ async def token(request: Request):
     asyncio.create_task(remove_key())
 
     return templates.TemplateResponse(
-        "token.html", {"request": request, "token": token, "sub": user["sub"]}
+        "token.html",
+        {
+            "request": request,
+            "token": token,
+            "sub": user["sub"],
+            "name": user["name"],
+            "account_url": env.laurel_auth_url
+            + "?redirect="
+            + str(request.url_for("auth_login")),
+            "logout_url": env.laurel_auth_url
+            + "auth/logout?redirect="
+            + str(request.url_for("auth_login")),
+        },
     )
