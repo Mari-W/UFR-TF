@@ -9,19 +9,6 @@
 </head>
 
 <body>
-  <!-- <section class="section">
-    <div class="container">
-      <h1 class="title">
-        Authentication Token Panel
-      </h1>
-      <p class="subtitle">
-        Hey there, <strong>{{ sub }}</strong>!
-      </p>
-      <div class="notification is-success">
-        {{token}}
-      </div>
-    </div>
-  </section> -->
   <div class="card" style="height: 100vh;">
     <header class="card-header">
       <p class="card-header-title">
@@ -36,11 +23,22 @@
         </div>
       </div>
       <div class="content">
-        <div class="notification is-success">
-          {{token}}
-        </div>
+
+        <button id="token" onclick="copy()" class="button notification is-success">
+          65c3aa44-96a0-4cdc-b076-1cc5c99e73bd
+        </button>
+        <br>
         <time id="time">...</time>
         <script>
+          function copy() {
+            navigator.clipboard.writeText("{{token}}");
+            document.getElementById("token").classList.remove("is-success")
+            document.getElementById("token").classList.add("is-primary")
+            setTimeout(() => {
+              document.getElementById("token").classList.add("is-success")
+              document.getElementById("token").classList.remove("is-primary")
+            }, 500);
+          }
           let date = new Date()
           date.setMinutes(date.getMinutes() + 5)
           document.getElementById("time").innerHTML = "token will expire at " + date.toLocaleTimeString()
