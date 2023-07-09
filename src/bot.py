@@ -388,12 +388,10 @@ async def forward_channel_request(
         )
 
 
+    # Fehler liegt hier
     view, embed = create_channel_request_accept_embed(
         input, request_interaction, on_accept, on_decline
     )
-
-    channel = utils.get(request_interaction.user.guild.channels, name="accept")
-    await channel.send(content="Until here?")
 
     channel = utils.get(request_interaction.user.guild.channels, name="accept")
     await channel.send(embed=embed, view=view)
