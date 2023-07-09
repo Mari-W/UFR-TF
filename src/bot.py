@@ -364,7 +364,7 @@ async def forward_channel_request(
         )
 
         await request_interaction.user.send(
-            channel_request_accepted(channel_request_accept_input.name_of_channel)
+            channel_request_accepted(channel_request_accept_input.name_of_channel.value)
         )
         embed = accept_interaction.message.embeds[0]
         embed = embed.set_footer(text=f"Accepted by {accept_interaction.user.nick}")
@@ -443,7 +443,7 @@ async def forward_offtopic_channel_request(
 
         await request_interaction.user.send(
             channel_request_accepted(
-                offtopic_channel_request_accept_input.name_of_channel
+                offtopic_channel_request_accept_input.name_of_channel.value
             )
         )
         embed = accept_interaction.message.embeds[0]
