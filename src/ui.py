@@ -255,8 +255,6 @@ def create_channel_request_accept_embed(
 
 accept_offtopic_channel_send = "Accepted offtopic channel request"
 decline_offtopic_channel_send = "Declined offtopic channel request"
-accept_channel_request_send = "Request sent"
-
 
 class OffTopicChannelRequestAcceptInput(Modal, title="Accept Offtopic Channel Request"):
     name_of_channel = TextInput(label="Name of Channel")

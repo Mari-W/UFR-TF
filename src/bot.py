@@ -360,7 +360,7 @@ async def forward_channel_request(
             category=utils.get(
                 accept_interaction.user.guild.categories, name="channels"
             ),
-            topic=f"**[{channel_request_accept_input.kind_of_event}]** {channel_request_accept_input.name_of_lecture}",
+            topic=f"**[{channel_request_accept_input.kind_of_event.value}]** {channel_request_accept_input.name_of_lecture.value}",
         )
 
         await request_interaction.user.send(
