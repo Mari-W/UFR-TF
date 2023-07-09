@@ -237,13 +237,19 @@ def create_channel_request_accept_embed(
         colour=Colour.blurple(),
         timestamp=datetime.now(),
     )
-    #accept_channel_request_embed.add_field(
-    #    "Name of Lecture", input.name_of_lecture.value
-    #)
-    #accept_channel_request_embed.add_field("Kind of Lecture", input.kind_of_event.value)
-    #accept_channel_request_embed.add_field(
-    #    "Name of Channel", input.name_of_channel.value
-    #)
+    # Fehler liegt hier
+    accept_channel_request_embed.add_field(
+        name="Name of Lecture",
+        value=input.name_of_lecture.value
+    )
+    accept_channel_request_embed.add_field(
+        name="Kind of Lecture",
+        value=input.kind_of_event.value
+    )
+    accept_channel_request_embed.add_field(
+        name="Name of Channel",
+        value=input.name_of_channel.value
+    )
     accept_channel_request_embed.set_author(
         name=interaction.user.nick, icon_url=interaction.user.avatar.url
     )

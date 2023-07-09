@@ -387,8 +387,6 @@ async def forward_channel_request(
             decline_interaction.response, decline_channel_send
         )
 
-
-    # Fehler liegt hier
     view, embed = create_channel_request_accept_embed(
         input, request_interaction, on_accept, on_decline
     )
