@@ -240,15 +240,18 @@ def create_channel_request_accept_embed(
     # Fehler liegt hier
     accept_channel_request_embed.add_field(
         name="Name of Lecture",
-        value=input.name_of_lecture.value
+        value=input.name_of_lecture.value,
+        inline=False
     )
     accept_channel_request_embed.add_field(
         name="Kind of Lecture",
-        value=input.kind_of_event.value
+        value=input.kind_of_event.value,
+        inline=False
     )
     accept_channel_request_embed.add_field(
         name="Name of Channel",
-        value=input.name_of_channel.value
+        value=input.name_of_channel.value,
+        inline=False
     )
     accept_channel_request_embed.set_author(
         name=interaction.user.nick, icon_url=interaction.user.avatar.url
@@ -339,10 +342,14 @@ def create_offtopic_channel_request_accept_embed(
         timestamp=datetime.now(),
     )
     accept_offtopic_channel_request_embed.add_field(
-        "Name of Channel", input.name_of_channel.value
+        name="Name of Channel",
+        value=input.name_of_channel.value,
+        inline=False
     )
     accept_offtopic_channel_request_embed.add_field(
-        "Description", input.description.value
+        name="Description",
+        value=input.description.value,
+        inline=False
     )
 
     accept_offtopic_channel_request_embed.set_author(
