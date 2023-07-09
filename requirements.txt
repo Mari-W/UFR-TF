@@ -8,3 +8,4 @@ httpx
 itsdangerous
 jinja2
 slowapi
+pydantic-settings
