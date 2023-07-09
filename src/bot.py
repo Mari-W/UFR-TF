@@ -387,6 +387,9 @@ async def forward_channel_request(
             decline_interaction.response, decline_channel_send
         )
 
+    channel = utils.get(request_interaction.user.guild.channels, name="accept")
+    await channel.send(content="Until here")
+
     view, embed = create_channel_request_accept_embed(
         input, request_interaction, on_accept, on_decline
     )
