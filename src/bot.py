@@ -565,7 +565,7 @@ async def forward_support_request(
         )
         embed = accept_interaction.message.embeds[0]
         embed = embed.set_footer(text=f"Accepted by {accept_interaction.user.nick}")
-        invite = channel.create_invite(max_age=120, max_uses=2)
+        invite = await channel.create_invite(max_age=120, max_uses=2)
         await request_interaction.user.send(
             support_request_accepted(request_interaction.user.nick, invite)
         )
