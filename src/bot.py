@@ -524,7 +524,7 @@ async def forward_support_request(
     async def on_accept(
         accept_interaction: Interaction,
     ):
-        await accept_interaction.user.guild.create_voice_channel(
+        channel = await accept_interaction.user.guild.create_voice_channel(
             name=f"{request_interaction.user.nick}'s support",
             overwrites={
                 utils.get(
@@ -565,19 +565,13 @@ async def forward_support_request(
         )
         embed = accept_interaction.message.embeds[0]
         embed = embed.set_footer(text=f"Accepted by {accept_interaction.user.nick}")
-        member_req = utils.get(accept_interaction.guild.members, name=request_interaction.user.name)
-        member_acc = utils.get(accept_interaction.guild.members, name=accept_interaction.user.name)
-        if member_acc.is_connected():
-            await member_acc.move_to(channel)
-        if member_req.is_connected():
-            await member_req.move_to(channel)
-        else:
-            await request_interaction.user.send(
-                support_request_accepted(request_interaction.user.nick)
-            )
+        invite = channel.create_invite(max_age=120, max_uses=2)
+        await request_interaction.user.send(
+            support_request_accepted(request_interaction.user.nick, invite)
+        )
         await accept_interaction.message.edit(embed=embed, view=None)
         await send_decaying_response_message(
-            accept_interaction.response, accept_support_send
+            accept_interaction.response, accept_support_send(invite)
         )
 
     async def on_decline(

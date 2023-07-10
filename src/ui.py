@@ -362,7 +362,7 @@ def create_offtopic_channel_request_accept_embed(
 
 support_request_send = "Request sent successfully"
 support_request_accepted = (
-    lambda nick: f"A moderator is now ready to help you in the {nick}'s support channel."
+    lambda nick, invite: f"A moderator is now ready to help you in the {nick}'s support channel. {invite}"
 )
 
 
@@ -395,8 +395,8 @@ support_embed.set_footer(text="Powered by Laurel")
 
 ## #accept support #############################################################################
 
-accept_support_send = "Accepted channel request"
-decline_support_send = "Declined channel request"
+accept_support_send = lambda invite: f"Accepted support request {invite}"
+decline_support_send = "Declined support request"
 
 accept_support_request_send = "Request submitted"
 
