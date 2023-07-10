@@ -357,7 +357,7 @@ def create_offtopic_channel_request_accept_embed(
 
     return accept_offtopic_channel_request_view, accept_offtopic_channel_request_embed
 
-# offtopic channel request #############################################################################
+# support request #############################################################################
 
 
 support_request_send = "Request sent successfully"
@@ -376,7 +376,7 @@ class SupportRequestInput(Modal, title="Support request"):
     )
 
 
-support_request_button = Button(label="Request Support", style=ButtonStyle.danger)
+support_request_button = Button(label="Request Support", style=ButtonStyle.green)
 
 support_view = lambda: (
     View(timeout=None)

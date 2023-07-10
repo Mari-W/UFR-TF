@@ -524,9 +524,6 @@ async def forward_support_request(
     async def on_accept(
         accept_interaction: Interaction,
     ):
-        await request_interaction.user.send(
-                support_request_accepted(request_interaction.user.nick)
-            )
         await accept_interaction.user.guild.create_voice_channel(
             name=f"{request_interaction.user.nick}'s support",
             overwrites={
@@ -568,9 +565,12 @@ async def forward_support_request(
         )
         embed = accept_interaction.message.embeds[0]
         embed = embed.set_footer(text=f"Accepted by {accept_interaction.user.nick}")
-        await accept_interaction.user.move_to(channel)
-        if request_interaction.user.is_connected():
-            request_interaction.user.move_to(channel)
+        member_req = utils.get(accept_interaction.guild.members, name=request_interaction.user.name)
+        member_acc = utils.get(accept_interaction.guild.members, name=accept_interaction.user.name)
+        if member_acc.is_connected():
+            await member_acc.move_to(channel)
+        if member_req.is_connected():
+            await member_req.move_to(channel)
         else:
             await request_interaction.user.send(
                 support_request_accepted(request_interaction.user.nick)
