@@ -59,6 +59,16 @@ from .ui import (
     OffTopicChannelRequestDeclineInput,
     accept_offtopic_channel_send,
     decline_offtopic_channel_send,
+    SupportRequestInput,
+    support_request_button,
+    support_embed,
+    support_view,
+    create_support_request_accept_embed,
+    accept_support_request_send,
+    support_request_accepted,
+    accept_support_send,
+    SupportRequestDeclineInput,
+    decline_support_send,
 )
 from .env import env
 
@@ -182,9 +192,34 @@ class Bot(Client):
 
         await message.edit(content="", embed=channel_embed, view=channel_view())
 
+    async def support(self):
+        # get channels channel
+        message = await last_or_new_channel_message(channel_by_name(self, "support"))
+
+        # opens the request modal
+        async def support_request_modal(interaction: Interaction):
+            support_request_input = SupportRequestInput()
+            support_request_input.on_submit = MethodType(
+                on_request, support_request_input
+            )
+            await interaction.response.send_modal(support_request_input)
+
+        # sends the request to admin channel
+        async def on_request(
+            input: SupportRequestInput,
+            interaction: Interaction,
+        ):
+            await forward_support_request(input, interaction)
+
+        support_request_button.callback = support_request_modal
+
+        await message.edit(content="", embed=support_embed, view=support_view())
+
+
     async def voice(self, member: Member, before: VoiceState, after: VoiceState):
         create = utils.get(member.guild.voice_channels, name="create")
         category = utils.get(member.guild.categories, name="voice")
+        category_support = utils.get(member.guild.categories, name="support")
 
         # user joined #create
         if before.channel != after.channel and after.channel == create:
@@ -232,7 +267,7 @@ class Bot(Client):
             await member.move_to(channel)
         if (
             before.channel != after.channel
-            and before.channel.category == category
+            and (before.channel.category == category or before.channel.category == category_support)
             and not before.channel.members
             and before.channel.id != int(env.create_voice_channel_id)
         ):
@@ -478,6 +513,92 @@ async def forward_offtopic_channel_request(
         request_interaction.response, accept_channel_request_send
     )
 
+## Support ##############################################################################
+
+
+async def forward_support_request(
+    input: SupportRequestInput, request_interaction: Interaction
+):
+    async def on_accept(
+        accept_interaction: Interaction,
+    ):
+        await accept_interaction.user.guild.create_voice_channel(
+            name=f"{request_interaction.user.nick}'s support",
+            overwrites={
+                utils.get(
+                    accept_interaction.user.guild.roles, name="@everyone"
+                ): PermissionOverwrite(
+                    view_channel=False,
+                ),
+                utils.get(
+                    accept_interaction.user.guild.roles, name="Authenticated"
+                ): PermissionOverwrite(
+                    add_reactions=True,
+                    attach_files=True,
+                    connect=True,
+                    create_instant_invite=True,
+                    create_public_threads=True,
+                    embed_links=True,
+                    external_emojis=True,
+                    external_stickers=True,
+                    read_message_history=True,
+                    read_messages=True,
+                    send_messages=True,
+                    send_messages_in_threads=True,
+                    send_voice_messages=True,
+                    speak=True,
+                    stream=True,
+                    use_application_commands=True,
+                    use_embedded_activities=True,
+                    use_external_emojis=True,
+                    use_external_sounds=True,
+                    use_external_stickers=True,
+                    use_soundboard=True,
+                    use_voice_activation=True,
+                ),
+            },
+            category=utils.get(
+                accept_interaction.user.guild.categories, name="support"
+            )
+        )
+        embed = accept_interaction.message.embeds[0]
+        embed = embed.set_footer(text=f"Accepted by {accept_interaction.user.nick}")
+        await accept_interaction.user.move_to(channel)
+        if request_interaction.user.is_connected():
+            request_interaction.user.move_to(channel)
+        else:
+            await request_interaction.user.send(
+                support_request_accepted(request_interaction.user.nick)
+            )
+        await accept_interaction.message.edit(embed=embed, view=None)
+        await send_decaying_response_message(
+            accept_interaction.response, accept_support_send
+        )
+
+    async def on_decline(
+        support_request_decline_input: SupportRequestDeclineInput,
+        decline_interaction: Interaction,
+    ):
+        decline_message = support_request_decline_input.declined_massage.value
+        await request_interaction.user.send(decline_message)
+
+        embed = decline_interaction.message.embeds[0]
+        embed = embed.set_footer(text=f"Declined by {decline_interaction.user.nick}")
+        await decline_interaction.message.edit(embed=embed, view=None)
+        await send_decaying_response_message(
+            decline_interaction.response, decline_support_send
+        )
+
+    view, embed = create_support_request_accept_embed(
+        input, request_interaction, on_accept, on_decline
+    )
+
+    channel = utils.get(request_interaction.user.guild.channels, name="accept")
+    await channel.send(embed=embed, view=view)
+
+    await send_decaying_response_message(
+        request_interaction.response, accept_support_request_send
+    )
 
 ## Utils ################################################################################
 

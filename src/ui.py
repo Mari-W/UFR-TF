@@ -237,7 +237,6 @@ def create_channel_request_accept_embed(
         colour=Colour.blurple(),
         timestamp=datetime.now(),
     )
-    # Fehler liegt hier
     accept_channel_request_embed.add_field(
         name="Name of Lecture",
         value=input.name_of_lecture.value,
@@ -357,3 +356,104 @@ def create_offtopic_channel_request_accept_embed(
     )
 
     return accept_offtopic_channel_request_view, accept_offtopic_channel_request_embed
+
+# offtopic channel request #############################################################################
+
+
+support_request_send = "Request sent successfully"
+support_request_accepted = (
+    lambda nick: f"A moderator is now ready to help you in the {nick}'s support channel."
+)
+
+
+support_embed_description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
+
+
+class SupportRequestInput(Modal, title="Support request"):
+    topic = TextInput(label="Topic", placeholder="eg. Authenticate")
+    description = TextInput(
+        label="Description", placeholder="eg. My generated token isn't valid."
+    )
+
+
+support_request_button = Button(label="Request Support", style=ButtonStyle.danger)
+
+support_view = lambda: (
+    View(timeout=None)
+    .add_item(support_request_button)
+)
+
+support_embed = Embed(
+    type="rich",
+    title="Support",
+    colour=Colour.blurple(),
+    timestamp=datetime.now(),
+    description=support_embed_description,
+)
+
+support_embed.set_footer(text="Powered by Laurel")
+
+## #accept support #############################################################################
+
+accept_support_send = "Accepted channel request"
+decline_support_send = "Declined channel request"
+
+accept_support_request_send = "Request submitted"
+
+
+class SupportRequestDeclineInput(Modal, title="Decline Support Request"):
+    declined_massage = TextInput(label="Reason")
+
+
+def create_support_request_accept_embed(
+    input: SupportRequestInput,
+    interaction: Interaction,
+    on_accept: Callable[[Interaction], None],
+    on_decline: Callable[[SupportRequestDeclineInput, Interaction], None],
+) -> tuple[View, Embed]:
+    async def support_request_decline_modal(modal_interaction: Interaction):
+        support_request_decline_input = SupportRequestDeclineInput()
+
+        support_request_decline_input.declined_massage.default = (
+            "There is already a forum post for this topic."
+        )
+
+        support_request_decline_input.on_submit = MethodType(
+            on_decline, support_request_decline_input
+        )
+
+        await modal_interaction.response.send_modal(support_request_decline_input)
+
+    accept_support_request_button = Button(label="Accept", style=ButtonStyle.green)
+    decline_support_request_button = Button(label="Decline", style=ButtonStyle.danger)
+
+    accept_support_request_button.callback = on_accept
+    decline_support_request_button.callback = support_request_decline_modal
+
+    accept_support_request_view = (
+        View(timeout=None)
+        .add_item(accept_support_request_button)
+        .add_item(decline_support_request_button)
+    )
+
+    accept_support_request_embed = Embed(
+        type="rich",
+        title="Support Request",
+        colour=Colour.green(),
+        timestamp=datetime.now(),
+    )
+    accept_support_request_embed.add_field(
+        name="Topic",
+        value=input.topic.value,
+        inline=False
+    )
+    accept_support_request_embed.add_field(
+        name="Description",
+        value=input.description.value,
+        inline=False
+    )
+    accept_support_request_embed.set_author(
+        name=interaction.user.nick, icon_url=interaction.user.avatar.url
+    )
+
+    return accept_support_request_view, accept_support_request_embed
