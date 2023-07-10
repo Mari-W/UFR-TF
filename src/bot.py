@@ -193,7 +193,7 @@ class Bot(Client):
         await message.edit(content="", embed=channel_embed, view=channel_view())
 
     async def support(self):
-        # get channels channel
+        # get support channel
         message = await last_or_new_channel_message(channel_by_name(self, "support"))
 
         # opens the request modal
