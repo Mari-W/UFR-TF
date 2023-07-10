@@ -524,6 +524,9 @@ async def forward_support_request(
     async def on_accept(
         accept_interaction: Interaction,
     ):
+        await request_interaction.user.send(
+                support_request_accepted(request_interaction.user.nick)
+            )
         await accept_interaction.user.guild.create_voice_channel(
             name=f"{request_interaction.user.nick}'s support",
             overwrites={
