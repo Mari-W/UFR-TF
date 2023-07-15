@@ -347,6 +347,8 @@ async def update_nickname(name: str, interaction: Interaction):
     matches = re.findall(r"^\[[a-z0-9]+\]", str(interaction.user.nick))
     if len(matches) != 1:
         await send_decaying_response_message(interaction.response, account_name_invalid)
+    elif re.search(r"\[[a-z][a-z][0-9]+\]", matches[0]):
+        await send_decaying_response_message(interaction.response, account_name_invalid)
     else:
         try:
             await interaction.user.edit(nick=f"{matches[0]} {name}")
@@ -630,7 +632,7 @@ async def last_or_new_channel_message(channel: TextChannel) -> Message:
 def channel_by_name(bot: Bot, name: str, category: str | None = None):
     def find(channel: TextChannel) -> bool:
         return channel.name == name and (
-            category == None or channel.category.name == category
+            category is None or channel.category.name == category
         )
 
     return utils.find(find, bot.guilds[0].text_channels)
