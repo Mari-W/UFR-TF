@@ -347,7 +347,7 @@ async def update_nickname(name: str, interaction: Interaction):
     matches = re.findall(r"^\[[a-z0-9]+\]", str(interaction.user.nick))
     if len(matches) != 1:
         await send_decaying_response_message(interaction.response, account_name_invalid)
-    elif re.search(r"\[[a-z][a-z][0-9]+\]", matches[0]):
+    elif re.search(r"\[[a-z][a-z][0-9]+\]", name):
         await send_decaying_response_message(interaction.response, account_name_invalid)
     else:
         try:
