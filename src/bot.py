@@ -42,7 +42,6 @@ from .ui import (
     account_embed,
     ChannelRequestInput,
     channels_request_button,
-    channel_request_send,
     channel_view,
     channel_embed,
     ChannelRequestAcceptInput,
@@ -75,7 +74,7 @@ from .env import env
 # thread shared state between fastapi and discord bot
 state = Manager().dict()
 
-## Bot ##################################################################################
+# Bot #########################################################################
 
 
 class Bot(Client):
@@ -139,7 +138,10 @@ class Bot(Client):
         # opens token modal for sync
         async def account_token_modal(interaction: Interaction):
             account_token_input = AccountTokenInput()
-            account_token_input.on_submit = MethodType(on_update, account_token_input)
+            account_token_input.on_submit = MethodType(
+                on_update,
+                account_token_input
+            )
             await interaction.response.send_modal(account_token_input)
 
         account_update_button.callback = account_token_modal
@@ -151,7 +153,10 @@ class Bot(Client):
         # opens name modal for new name
         async def account_name_modal(interaction: Interaction):
             account_name_input = AccountNameInput()
-            account_name_input.on_submit = MethodType(on_rename, account_name_input)
+            account_name_input.on_submit = MethodType(
+                on_rename,
+                account_name_input
+            )
             await interaction.response.send_modal(account_name_input)
 
         account_name_button.callback = account_name_modal
@@ -160,7 +165,9 @@ class Bot(Client):
 
     async def channels(self):
         # get channels channel
-        message = await last_or_new_channel_message(channel_by_name(self, "channels"))
+        message = await last_or_new_channel_message(
+            channel_by_name(self, "channels")
+        )
 
         # opens the request modal
         async def channel_request_modal(interaction: Interaction):
@@ -176,7 +183,9 @@ class Bot(Client):
             offtopic_channel_request_input.on_submit = MethodType(
                 on_request, offtopic_channel_request_input
             )
-            await interaction.response.send_modal(offtopic_channel_request_input)
+            await interaction.response.send_modal(
+                offtopic_channel_request_input
+            )
 
         # sends the request to admin channel
         async def on_request(
@@ -192,11 +201,17 @@ class Bot(Client):
         channels_request_button.callback = channel_request_modal
         offtopic_request_button.callback = offtopic_channel_request_modal
 
-        await message.edit(content="", embed=channel_embed, view=channel_view())
+        await message.edit(
+            content="",
+            embed=channel_embed,
+            view=channel_view()
+        )
 
     async def support(self):
         # get support channel
-        message = await last_or_new_channel_message(channel_by_name(self, "support"))
+        message = await last_or_new_channel_message(
+            channel_by_name(self, "support")
+        )
 
         # opens the request modal
         async def support_request_modal(interaction: Interaction):
@@ -215,10 +230,16 @@ class Bot(Client):
 
         support_request_button.callback = support_request_modal
 
-        await message.edit(content="", embed=support_embed, view=support_view())
+        await message.edit(content="",
+                           embed=support_embed,
+                           view=support_view()
+                           )
 
-
-    async def voice(self, member: Member, before: VoiceState, after: VoiceState):
+    async def voice(self,
+                    member: Member,
+                    before: VoiceState,
+                    after: VoiceState
+                    ):
         create = utils.get(member.guild.voice_channels, name="create")
         category = utils.get(member.guild.categories, name="voice")
         category_support = utils.get(member.guild.categories, name="support")
@@ -269,7 +290,8 @@ class Bot(Client):
             await member.move_to(channel)
         if (
             before.channel != after.channel
-            and (before.channel.category == category or before.channel.category == category_support)
+            and (before.channel.category == category or
+                 before.channel.category == category_support)
             and not before.channel.members
             and before.channel.id != int(env.create_voice_channel_id)
         ):
@@ -277,10 +299,13 @@ class Bot(Client):
             await before.channel.delete()
 
 
-## Functionality ########################################################################
+# Functionality ###############################################################
 
 
-async def authorize_token(token: str, interaction: Interaction, message=True) -> bool:
+async def authorize_token(token: str,
+                          interaction: Interaction,
+                          message=True
+                          ) -> bool:
     # token is valid
     if token in state:
         # get user information
@@ -316,7 +341,9 @@ async def authorize_token(token: str, interaction: Interaction, message=True) ->
     # token is invalid
     else:
         # send failure message
-        await send_decaying_response_message(interaction.response, auth_login_failure)
+        await send_decaying_response_message(interaction.response,
+                                             auth_login_failure
+                                             )
         return False
 
 
@@ -339,7 +366,9 @@ async def disconnect_account(interaction: Interaction, message=True) -> bool:
         pass
 
     if message:
-        await send_decaying_response_message(interaction.response, auth_logout_success)
+        await send_decaying_response_message(interaction.response,
+                                             auth_logout_success
+                                             )
     return True
 
 
@@ -399,14 +428,18 @@ async def forward_channel_request(
             category=utils.get(
                 accept_interaction.user.guild.categories, name="channels"
             ),
-            topic=f"**[{channel_request_accept_input.kind_of_event.value}]** {channel_request_accept_input.name_of_lecture.value}",
+            topic=f"""**[{
+            channel_request_accept_input.kind_of_event.value}]** {
+            channel_request_accept_input.name_of_lecture.value}""",
         )
 
         await request_interaction.user.send(
-            channel_request_accepted(channel_request_accept_input.name_of_channel.value)
+            channel_request_accepted(
+                channel_request_accept_input.name_of_channel.value)
         )
         embed = accept_interaction.message.embeds[0]
-        embed = embed.set_footer(text=f"Accepted by {accept_interaction.user.nick}")
+        embed = embed.set_footer(
+            text=f"Accepted by {accept_interaction.user.nick}")
         await accept_interaction.message.edit(embed=embed, view=None)
         await send_decaying_response_message(
             accept_interaction.response, accept_channel_send
@@ -420,7 +453,8 @@ async def forward_channel_request(
         await request_interaction.user.send(decline_message)
 
         embed = decline_interaction.message.embeds[0]
-        embed = embed.set_footer(text=f"Declined by {decline_interaction.user.nick}")
+        embed = embed.set_footer(
+            text=f"Declined by {decline_interaction.user.nick}")
         await decline_interaction.message.edit(embed=embed, view=None)
         await send_decaying_response_message(
             decline_interaction.response, decline_channel_send
@@ -486,7 +520,8 @@ async def forward_offtopic_channel_request(
             )
         )
         embed = accept_interaction.message.embeds[0]
-        embed = embed.set_footer(text=f"Accepted by {accept_interaction.user.nick}")
+        embed = embed.set_footer(
+            text=f"Accepted by {accept_interaction.user.nick}")
         await accept_interaction.message.edit(embed=embed, view=None)
         await send_decaying_response_message(
             accept_interaction.response, accept_offtopic_channel_send
@@ -500,7 +535,8 @@ async def forward_offtopic_channel_request(
         await request_interaction.user.send(decline_message)
 
         embed = decline_interaction.message.embeds[0]
-        embed = embed.set_footer(text=f"Declined by {decline_interaction.user.nick}")
+        embed = embed.set_footer(
+            text=f"Declined by {decline_interaction.user.nick}")
         await decline_interaction.message.edit(embed=embed, view=None)
         await send_decaying_response_message(
             decline_interaction.response, decline_offtopic_channel_send
@@ -517,7 +553,7 @@ async def forward_offtopic_channel_request(
         request_interaction.response, accept_channel_request_send
     )
 
-## Support ##############################################################################
+# Support ####################################################################
 
 
 async def forward_support_request(
@@ -566,7 +602,8 @@ async def forward_support_request(
             )
         )
         embed = accept_interaction.message.embeds[0]
-        embed = embed.set_footer(text=f"Accepted by {accept_interaction.user.nick}")
+        embed = embed.set_footer(
+            text=f"Accepted by {accept_interaction.user.nick}")
         invite = await channel.create_invite(max_age=120, max_uses=2)
         await request_interaction.user.send(
             support_request_accepted(request_interaction.user.nick, invite)
@@ -584,7 +621,8 @@ async def forward_support_request(
         await request_interaction.user.send(decline_message)
 
         embed = decline_interaction.message.embeds[0]
-        embed = embed.set_footer(text=f"Declined by {decline_interaction.user.nick}")
+        embed = embed.set_footer(
+            text=f"Declined by {decline_interaction.user.nick}")
         await decline_interaction.message.edit(embed=embed, view=None)
         await send_decaying_response_message(
             decline_interaction.response, decline_support_send
@@ -601,15 +639,15 @@ async def forward_support_request(
         request_interaction.response, accept_support_request_send
     )
 
-## Utils ################################################################################
 
-
+# Utils #######################################################################
 async def get_or_create_role(guild: Any, name: str) -> Role:
     role = utils.get(guild.roles, name=name)
     if role is None:
         role = await guild.create_role(
             name=name,
-            colour=Colour.from_rgb(randint(0, 255), randint(0, 255), randint(0, 255)),
+            colour=Colour.from_rgb(
+                randint(0, 255), randint(0, 255), randint(0, 255)),
             hoist=True,
         )
         await role.edit(position=2)

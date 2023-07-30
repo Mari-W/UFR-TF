@@ -8,6 +8,7 @@ from fastapi.templating import Jinja2Templates
 from .env import env
 from .bot import state
 
+
 # openid connect client for laurel
 laurel = OAuth()
 laurel.register(
@@ -39,7 +40,8 @@ async def callback(request: Request):
 async def logout(request: Request):
     # logout locally
     request.session.clear()
-    # logging out by logging out of all laurel services and redirect to login here
+    # logging out by logging out of all laurel services and
+    # redirect to login here
     return RedirectResponse(
         env.laurel_auth_url
         + "auth/logout?redirect="
@@ -53,7 +55,8 @@ async def token(request: Request):
         return RedirectResponse(request.url_for("auth_login"))
     token = str(uuid4())
 
-    # stores authorization token along user information in thread shared state for bot to access
+    # stores authorization token along user information in
+    # thread shared state for bot to access
     state[token] = user
 
     # key is valid for 5 minutes

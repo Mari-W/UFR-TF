@@ -1,5 +1,3 @@
-from multiprocessing import Manager
-
 # maps degree identities returned by laurel (i.e. ldap) to actual names
 degrees = {
     "05-968": "Ältere deutsche Literatur und Sprache",

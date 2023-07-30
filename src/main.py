@@ -22,7 +22,8 @@ limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-app.add_middleware(SessionMiddleware, secret_key=env.secret_key, max_age=94608000)
+app.add_middleware(SessionMiddleware,
+                   secret_key=env.secret_key, max_age=94608000)
 
 # Events
 
@@ -58,7 +59,7 @@ async def auth_callback(request: Request):
     return await callback(request)
 
 
-## Discord Bot ##########################################################################
+# Discord Bot #################################################################
 
 bot = Bot()
 
