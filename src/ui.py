@@ -14,7 +14,7 @@ footer = "UFR Fachschaft TF"
 # #about ######################################################################
 
 about_embed_description = """This is the official Discord server of the Technical Faculty of the University of Freiburg by the Fachschaft."""
-about_embed_overview = """- text channel - \\\\- voice channel - \\\\- Forum - \\\\- support -"""
+about_embed_overview = """- text channel \\\\- voice channel \\\\- Forum \\\\- support"""
 about_embed_auth = """To get full access to this server authenticate yourself via the `#authenticate` channel."""
 about_embed_rules = """Please behave reasonable and respectful. Be aware that you are not anonymous on this server as your account is linked to your university account. Misconduct can lead to a temporary or a lifetime ban from this server."""
 
