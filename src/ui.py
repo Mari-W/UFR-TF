@@ -7,11 +7,15 @@ from types import MethodType
 
 from .env import env
 
+# footer ######################################################################
+
+footer = "UFR Fachschaft TF"
+
 # #about ######################################################################
 
-about_embed_description = """This is the official Discord server of the Technical Faculty of the University of Freiburg."""
-about_embed_auth = """To get full access to this server authenticate yourself via the `#authenticate` channel"""
-about_embed_rules = """Please behave reasonable and respectful. Be aware that you are not anonymous on this server as your account is linked to your university account. Misconduct can lead to a temporary or lifetime ban from this server."""
+about_embed_description = """This is the official Discord server of the Technical Faculty of the University of Freiburg by the Fachschaft."""
+about_embed_auth = """To get full access to this server authenticate yourself via the `#authenticate` channel."""
+about_embed_rules = """Please behave reasonable and respectful. Be aware that you are not anonymous on this server as your account is linked to your university account. Misconduct can lead to a temporary or a lifetime ban from this server."""
 
 about_embed = Embed(
     type="rich",
@@ -20,6 +24,8 @@ about_embed = Embed(
     timestamp=datetime.now(),
     description=about_embed_description,
 )
+
+about_embed.set_footer(text=footer)
 
 about_embed.add_field(name="Authentication",
                       value=about_embed_auth, inline=False)
@@ -31,9 +37,9 @@ auth_login_success = "Login successful."
 auth_login_failure = "Invalid Token. A token is valid only for 5 Minutes. You might want to generate a new token by reloading the website."
 auth_logout_success = "Logout successful."
 
-auth_embed_description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
-auth_embed_get_token = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
-auth_embed_enter_token = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
+auth_embed_description = """This server is and only is for members of the University of Freiburg. Authenticate yourself with your university account as described by the following steps."""
+auth_embed_get_token = """To get your token click the `Get Auth Token` button below. Log in with your university account and copy the token by clicking on the green box. Then continue with the next step."""
+auth_embed_enter_token = """Once you've copied your token click the `Enter Auth Token` button below and paste in your token. Once submitted you gain full access to this server."""
 
 
 class AuthTokenInput(Modal, title="Enter Authentication Token"):
@@ -61,6 +67,8 @@ auth_embed.add_field(
 auth_embed.add_field(name="Enter Token",
                      value=auth_embed_enter_token, inline=False)
 auth_embed.set_footer(text="Powered by Laurel")
+
+auth_embed.set_footer(text=footer)
 
 # #account ####################################################################
 
@@ -122,7 +130,7 @@ account_embed.add_field(
     value=account_embed_name,
     inline=False,
 )
-account_embed.set_footer(text="Powered by Laurel")
+account_embed.set_footer(text=footer)
 
 # #channels ###################################################################
 
@@ -179,7 +187,7 @@ channel_embed = Embed(
     description=channels_embed_description,
 )
 
-channel_embed.set_footer(text="Powered by Laurel")
+channel_embed.set_footer(text=footer)
 
 # #accept channels ############################################################
 
@@ -426,7 +434,7 @@ support_embed = Embed(
     description=support_embed_description,
 )
 
-support_embed.set_footer(text="Powered by Laurel")
+support_embed.set_footer(text=footer)
 
 # #accept support #############################################################
 
