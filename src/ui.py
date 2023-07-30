@@ -14,6 +14,7 @@ footer = "UFR Fachschaft TF"
 # #about ######################################################################
 
 about_embed_description = """This is the official Discord server of the Technical Faculty of the University of Freiburg by the Fachschaft."""
+about_embed_overview = """- text channel - \\\\- voice channel - \\\\- Forum - \\\\- support -"""
 about_embed_auth = """To get full access to this server authenticate yourself via the `#authenticate` channel."""
 about_embed_rules = """Please behave reasonable and respectful. Be aware that you are not anonymous on this server as your account is linked to your university account. Misconduct can lead to a temporary or a lifetime ban from this server."""
 
@@ -26,6 +27,9 @@ about_embed = Embed(
 )
 
 about_embed.set_footer(text=footer)
+
+about_embed.add_field(name="Overview",
+                      value=about_embed_overview, inline=False)
 
 about_embed.add_field(name="Authentication",
                       value=about_embed_auth, inline=False)
@@ -140,7 +144,7 @@ channel_request_accepted = (
 )
 
 
-channels_embed_description = """In order to minimize unused course channels, new channels are created via a request system. If currently there is no channel for a course of yours feel free to request one here. Keep in mind that not all channels are listed in the `channels` category so check the `Browse Channels` before. If you want a new channel for any lecture/seminar/.. request it via the `Request Channel` button for everything else use the `Request Offtopic Channel`. As soon as your channel is accepted or denied you will be notified."""
+channels_embed_description = """In order to minimize unused course channels, new channels are created via a request system. If currently there is no channel for a course of yours feel free to request one here. Keep in mind that not all channels are listed in the `channels` category so check out `Browse Channels` before. If you want a new channel for any lecture/seminar/.. request it via the `Request Channel` button for everything else use the `Request Offtopic Channel`. As soon as your channel is accepted or denied you will be notified."""
 
 
 class ChannelRequestInput(Modal, title="Text Channel Request"):
