@@ -75,10 +75,11 @@ auth_embed.set_footer(text=footer)
 account_update_success = "Sync successful."
 account_name_invalid = "Your name does not follow the naming guidelines. Please contact a server administrator."
 account_name_update_success = "Name update successful."
-account_embed_description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
-account_embed_disconnect = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
-account_embed_sync = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
-account_embed_name = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
+
+account_embed_description = """Manage your account."""
+account_embed_disconnect = """By pressing the `Disconnect` button the connection between your university and discord account is removed. You can reconnect at any time via the `#authenticate` channel."""
+account_embed_sync = """If there are any changes in your role or subject of study at the University of Freiburg you can update your discord account via the `Get Sync Token` and the `Enter Sync Token` buttons."""
+account_embed_name = """You can change your server nickname at any time and as often as you want via the `Update Nickname` button. However, you can't change your nickname via your server profile as we want to ensure the naming guidlines."""
 
 
 class AccountTokenInput(Modal, title="Enter Authentication Token"):
@@ -126,7 +127,7 @@ account_embed.add_field(
     inline=False,
 )
 account_embed.add_field(
-    name="3. Sync Discord Name",
+    name="3. Update Nickname",
     value=account_embed_name,
     inline=False,
 )
@@ -139,7 +140,7 @@ channel_request_accepted = (
 )
 
 
-channels_embed_description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
+channels_embed_description = """In order to minimize unused course channels, new channels are created via a request system. If currently there is no channel for a course of yours feel free to request one here. Keep in mind that not all channels are listed in the `channels` category so check the `Browse Channels` before. If you want a new channel for any lecture/seminar/.. request it via the `Request Channel` button for everything else use the `Request Offtopic Channel`. As soon as your channel is accepted or denied you will be notified."""
 
 
 class ChannelRequestInput(Modal, title="Text Channel Request"):
@@ -406,7 +407,7 @@ support_request_accepted = (
 )
 
 
-support_embed_description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vehicula pulvinar urna quis hendrerit. In hendrerit odio ac molestie sagittis. In fermentum nulla ac fringilla finibus. Fusce non mi porta, cursus urna id, tempor nibh. Morbi vitae turpis iaculis, imperdiet ex vitae, rhoncus ex. Phasellus congue odio eget pellentesque sagittis. Donec metus enim, molestie sit amet rutrum quis, vehicula eget diam."
+support_embed_description = "If you need any support that requires voice or video chat feel free to ask for support. You can do so by clicking the `Request Support` button below. Fill in the form and submit your request. As soon as someone is ready to help you, you will get a private link to a support channel. This link is only valid for five minutes. If you miss this timeslot you can easily submit a request again."
 
 
 class SupportRequestInput(Modal, title="Support request"):
