@@ -14,7 +14,7 @@ footer = "UFR Fachschaft TF"
 # #about ######################################################################
 
 about_embed_description = """Welcome to the inofficial Discord server of the Technical Faculty of the University of Freiburg by the Fachschaft."""
-about_embed_overview = """The server consists of five categories.
+about_embed_overview = """The server consists of four categories.
 - General: These channels are ready only and used to manage your account or distribute important links or information.
 - Voice: You can create a new voice channel by joining the `create` voice channel. Channels will be deleted as soon as they are empty.
 - Channels: These are the channels linked to lectures or similar events. For more information see the `#channels` channel.
@@ -183,29 +183,29 @@ channel_request_accepted = (
 )
 
 
-channels_embed_description = """In order to minimize unused course channels, new channels are created via a request system. If currently there is no channel for a course of yours feel free to request one here. Keep in mind that not all channels are listed in the `channels` category so check out `Browse Channels` before. If you want a new channel for any lecture/seminar/.. request it via the `Request Channel` button for everything else use the `Request Offtopic Channel`. As soon as your channel is accepted or denied you will be notified."""
+channels_embed_description = """In order to minimize unused course channels, new channels are created via a request system. Not all channels are listed in the `channels` category by default, so check out `Browse Channels` before requesting a new channel. If currently no channel for a course of yours exists, feel free to request it here. If your new channel is linked to any lecture/seminar/.. request it via the `Request Channel` button, for everything else use the `Request Offtopic Channel` button. As soon as your channel is accepted or denied you will be notified via DM."""
 
 
 class ChannelRequestInput(Modal, title="Text Channel Request"):
     name_of_lecture = TextInput(
-        label="Name of Lecture", placeholder="eg. SAT solving")
+        label="Name of Lecture", placeholder="e.g. Essentials of Programming Languages")
     kind_of_event = TextInput(
         label="Kind of Event",
-        placeholder="Lecture / Seminar / BOK / Lab / ..."
+        placeholder="Lecture / Vorlesung / Seminar / BOK / Lab / ..."
     )
     name_of_channel = TextInput(
         label="Suggested Channel Name",
-        placeholder="eg. sat-solving",
+        placeholder="e.g. eopl",
         required=False
     )
 
 
 class OffTopicChannelRequestInput(Modal, title="Offtopic Channel Request"):
     name_of_channel = TextInput(
-        label="Channel Name", placeholder="Volleyball")
+        label="Channel Name", placeholder="Spikeball")
     description = TextInput(
         label="Description",
-        placeholder="A place to find people for playing volleyball",
+        placeholder="Connect with people to play spikeball!",
     )
 
 
