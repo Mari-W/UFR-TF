@@ -13,10 +13,17 @@ footer = "UFR Fachschaft TF"
 
 # #about ######################################################################
 
-about_embed_description = """This is the official Discord server of the Technical Faculty of the University of Freiburg by the Fachschaft."""
-about_embed_overview = """- text channel \\\\- voice channel \\\\- Forum \\\\- support"""
+about_embed_description = """Welcome to the inofficial Discord server of the Technical Faculty of the University of Freiburg by the Fachschaft."""
+about_embed_overview = """The server consists of five categories.
+- General: These channels are ready only and used to manage your account or distribute important links or information.
+- Support: Here you can request support regarding the discord server or anything Fachschaft related.
+- Voice: You can create a new voice channel by joining the `create` voice channel. Channels will be deleted as soon as they are empty.
+- Channels: These are the channels linked to lectures or similar events. For more information see the `#channels` channel.
+- Offtopic: Offtopic channels are all other channels that are not linked to any lecture or event. For mire information see the `#channels` channel
+- 
+"""
 about_embed_auth = """To get full access to this server authenticate yourself via the `#authenticate` channel."""
-about_embed_rules = """Please behave reasonable and respectful. Be aware that you are not anonymous on this server as your account is linked to your university account. Misconduct can lead to a temporary or a lifetime ban from this server."""
+about_embed_rules = """Please behave reasonable and respectful. Be aware that you are not anonymous on this server as your account is linked to your university account. Misconduct can lead to exclusion from this server."""
 
 about_embed = Embed(
     type="rich",
@@ -35,15 +42,42 @@ about_embed.add_field(name="Authentication",
                       value=about_embed_auth, inline=False)
 about_embed.add_field(name="Rules", value=about_embed_rules, inline=False)
 
+# #links ######################################################################
+
+links_embed_description = """This channel tries to list all important links for your studies. If you feel like there is something missing, please request the addition of a link using the `forum`."""
+links_embed_overview = """
+## General
+- Course Management: https://campus.uni-freiburg.de
+- E-Learning: https://ilias.uni-freiburg.de
+
+## Fachschaft
+- Fachschaft: https://fachschaft.tf
+- Exam Database: https://db.fachschaft.tf
+- Hedgedoc: https://hedgedoc.fachschaft.tf/
+"""
+
+links_embed = Embed(
+    type="rich",
+    title="Important Links",
+    colour=Colour.blurple(),
+    timestamp=datetime.now(),
+    description=links_embed_description,
+)
+
+links_embed.set_footer(text=footer)
+
+links_embed.add_field(name="Links",
+                      value=links_embed_overview, inline=False)
+
 # #auth #######################################################################
 
 auth_login_success = "Login successful."
-auth_login_failure = "Invalid Token. A token is valid only for 5 Minutes. You might want to generate a new token by reloading the website."
+auth_login_failure = "Invalid Token. A token is only valid for 5 minutes. You can generate a new token by reloading the page."
 auth_logout_success = "Logout successful."
 
-auth_embed_description = """This server is and only is for members of the University of Freiburg. Authenticate yourself with your university account as described by the following steps."""
+auth_embed_description = """This server is though to be only for members of the University of Freiburg. In consequence, you need to authenticate yourself with your university account as described by the following steps."""
 auth_embed_get_token = """To get your token click the `Get Auth Token` button below. Log in with your university account and copy the token by clicking on the green box. Then continue with the next step."""
-auth_embed_enter_token = """Once you've copied your token click the `Enter Auth Token` button below and paste in your token. Once submitted you gain full access to this server."""
+auth_embed_enter_token = """Once you've copied your token click the `Enter Auth Token` button below and paste your token. You should then have gained full access to the server."""
 
 
 class AuthTokenInput(Modal, title="Enter Authentication Token"):
@@ -82,8 +116,8 @@ account_name_update_success = "Name update successful."
 
 account_embed_description = """Manage your account."""
 account_embed_disconnect = """By pressing the `Disconnect` button the connection between your university and discord account is removed. You can reconnect at any time via the `#authenticate` channel."""
-account_embed_sync = """If there are any changes in your role or subject of study at the University of Freiburg you can update your discord account via the `Get Sync Token` and the `Enter Sync Token` buttons."""
-account_embed_name = """You can change your server nickname at any time and as often as you want via the `Update Nickname` button. However, you can't change your nickname via your server profile as we want to ensure the naming guidlines."""
+account_embed_sync = """If there are any changes in your role or subject of study at the University of Freiburg you can update your discord account via the `Get Sync Token` and the `Enter Sync Token` buttons. Copy the token from the page opened via the `Get Sync Token` button by clicking the green box. Paste the token in the dialog opened when pressing `Enter Sync Token`."""
+account_embed_name = """You can change your server nickname at any time and as often as you want via the `Update Nickname` button. However, you can't change your nickname via your server profile as we want to ensure the naming guidelines, i.e. that names include the university account."""
 
 
 class AccountTokenInput(Modal, title="Enter Authentication Token"):
@@ -140,7 +174,7 @@ account_embed.set_footer(text=footer)
 # #channels ###################################################################
 
 channel_request_accepted = (
-    lambda channel: f"Your channel request for {channel} was accepted."
+    lambda channel: f"Your channel request for `{channel}` was accepted on the university discord."
 )
 
 
@@ -155,7 +189,7 @@ class ChannelRequestInput(Modal, title="Text Channel Request"):
         placeholder="Lecture / Seminar / BOK / Lab / ..."
     )
     name_of_channel = TextInput(
-        label="Suggested Name of Channel",
+        label="Suggested Channel Name",
         placeholder="eg. sat-solving",
         required=False
     )
@@ -163,7 +197,7 @@ class ChannelRequestInput(Modal, title="Text Channel Request"):
 
 class OffTopicChannelRequestInput(Modal, title="Offtopic Channel Request"):
     name_of_channel = TextInput(
-        label="Name of Channel", placeholder="Volleyball")
+        label="Channel Name", placeholder="Volleyball")
     description = TextInput(
         label="Description",
         placeholder="A place to find people for playing volleyball",
