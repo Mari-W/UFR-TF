@@ -20,7 +20,7 @@ about_embed_overview = """The server consists of five categories.
 - Voice: You can create a new voice channel by joining the `create` voice channel. Channels will be deleted as soon as they are empty.
 - Channels: These are the channels linked to lectures or similar events. For more information see the `#channels` channel.
 - Offtopic: Offtopic channels are all other channels that are not linked to any lecture or event. For mire information see the `#channels` channel
-- 
+
 """
 about_embed_auth = """To get full access to this server authenticate yourself via the `#authenticate` channel."""
 about_embed_rules = """Please behave reasonable and respectful. Be aware that you are not anonymous on this server as your account is linked to your university account. Misconduct can lead to exclusion from this server."""
@@ -54,6 +54,9 @@ links_embed_overview = """
 - Fachschaft: https://fachschaft.tf
 - Exam Database: https://db.fachschaft.tf
 - Hedgedoc: https://hedgedoc.fachschaft.tf/
+
+## Communication
+- This Discord: https://discord.gg/6H9facwNWg
 """
 
 links_embed = Embed(
