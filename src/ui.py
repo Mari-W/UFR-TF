@@ -16,11 +16,9 @@ footer = "UFR Fachschaft TF"
 about_embed_description = """Welcome to the inofficial Discord server of the Technical Faculty of the University of Freiburg by the Fachschaft."""
 about_embed_overview = """The server consists of five categories.
 - General: These channels are ready only and used to manage your account or distribute important links or information.
-- Support: Here you can request support regarding the discord server or anything Fachschaft related.
 - Voice: You can create a new voice channel by joining the `create` voice channel. Channels will be deleted as soon as they are empty.
 - Channels: These are the channels linked to lectures or similar events. For more information see the `#channels` channel.
 - Offtopic: Offtopic channels are all other channels that are not linked to any lecture or event. For mire information see the `#channels` channel
-
 """
 about_embed_auth = """To get full access to this server authenticate yourself via the `#authenticate` channel."""
 about_embed_rules = """Please behave reasonable and respectful. Be aware that you are not anonymous on this server as your account is linked to your university account. Misconduct can lead to exclusion from this server."""
@@ -46,16 +44,20 @@ about_embed.add_field(name="Rules", value=about_embed_rules, inline=False)
 
 links_embed_description = """This channel tries to list all important links for your studies. If you feel like there is something missing, please request the addition of a link using the `forum`."""
 links_embed_overview = """
-## General
+General:
+
 - Course Management: https://campus.uni-freiburg.de
 - E-Learning: https://ilias.uni-freiburg.de
 
-## Fachschaft
+
+Fachschaft:
+
 - Fachschaft: https://fachschaft.tf
 - Exam Database: https://db.fachschaft.tf
 - Hedgedoc: https://hedgedoc.fachschaft.tf/
 
-## Communication
+
+Communication:
 - This Discord: https://discord.gg/6H9facwNWg
 """
 
@@ -448,7 +450,7 @@ support_request_accepted = (
 )
 
 
-support_embed_description = "If you need any support that requires voice or video chat feel free to ask for support. You can do so by clicking the `Request Support` button below. Fill in the form and submit your request. As soon as someone is ready to help you, you will get a private link to a support channel. This link is only valid for five minutes. If you miss this timeslot you can easily submit a request again."
+support_embed_description = "If you need any support that requires voice or video chat feel free to ask for support. You can do so by clicking the `Request Support` button below. Fill in the form and submit your request. As soon as someone is ready to help you, you will get a private link to a support channel. This link is only valid for five minutes. If you miss this time slot you can easily submit a request again. Alternatively you can create a new thread in the `forum` "
 
 
 class SupportRequestInput(Modal, title="Support request"):
