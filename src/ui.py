@@ -45,17 +45,13 @@ about_embed.add_field(name="Rules", value=about_embed_rules, inline=False)
 links_embed_description = """This channel tries to list all important links for your studies. If you feel like there is something missing, please request the addition of a link using the `forum`."""
 links_embed_overview = """
 General:
-
 - Course Management: https://campus.uni-freiburg.de
 - E-Learning: https://ilias.uni-freiburg.de
 
-
 Fachschaft:
-
 - Fachschaft: https://fachschaft.tf
 - Exam Database: https://db.fachschaft.tf
 - Hedgedoc: https://hedgedoc.fachschaft.tf/
-
 
 Communication:
 - This Discord: https://discord.gg/6H9facwNWg
